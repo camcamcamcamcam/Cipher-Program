@@ -9,9 +9,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class Window {
 
+	static JPanel cipher, database, test, export;
+	static JTextArea textArea;
 	private JFrame frame;
 
 	/**
@@ -45,14 +48,19 @@ public class Window {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel cipher = new JPanel();
+		cipher = new JPanel();
 		frame.getContentPane().add(cipher, BorderLayout.CENTER);
-		JPanel database = new JPanel();
+		database = new JPanel();
 		frame.getContentPane().add(database, BorderLayout.CENTER);
-		JPanel test = new JPanel();
+		test = new JPanel();
 		frame.getContentPane().add(test, BorderLayout.CENTER);
-		JPanel export = new JPanel();
+		export = new JPanel();
 		frame.getContentPane().add(export, BorderLayout.CENTER);
+		
+		textArea = new JTextArea();
+		textArea.setText("Well done!");
+		textArea.setWrapStyleWord(true);
+		export.add(textArea);
 		
 		// Initializing frames for each mode
 
@@ -64,11 +72,8 @@ public class Window {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				export.setVisible(true);
-				database.setVisible(false);
-				test.setVisible(false);
-				export.setVisible(false);
-
+				Methods.switchPanes("cipher");
+				System.out.println("Switched to cipher");
 			}
 
 		});
@@ -79,10 +84,7 @@ public class Window {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				export.setVisible(false);
-				database.setVisible(true);
-				test.setVisible(false);
-				export.setVisible(false);
+				Methods.switchPanes("database");
 
 			}
 
@@ -94,11 +96,7 @@ public class Window {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				export.setVisible(false);
-				database.setVisible(false);
-				test.setVisible(true);
-				export.setVisible(false);
-
+				Methods.switchPanes("test");
 			}
 
 		});
@@ -109,11 +107,7 @@ public class Window {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				export.setVisible(false);
-				database.setVisible(false);
-				test.setVisible(false);
-				export.setVisible(true);
-
+				Methods.switchPanes("export");
 			}
 
 		});
