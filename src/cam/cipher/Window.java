@@ -2,19 +2,12 @@ package cam.cipher;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTabbedPane;
 
 public class Window {
 
-	static JPanel cipher, database, test, export;
-	static JTextArea textArea;
 	private JFrame frame;
 
 	/**
@@ -26,6 +19,7 @@ public class Window {
 				try {
 					Window window = new Window();
 					window.frame.setVisible(true);
+					window.frame.setExtendedState(window.frame.getExtendedState() | window.frame.MAXIMIZED_BOTH);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -47,74 +41,21 @@ public class Window {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		cipher = new JPanel();
-		frame.getContentPane().add(cipher, BorderLayout.CENTER);
-		database = new JPanel();
-		frame.getContentPane().add(database, BorderLayout.CENTER);
-		test = new JPanel();
-		frame.getContentPane().add(test, BorderLayout.CENTER);
-		export = new JPanel();
-		frame.getContentPane().add(export, BorderLayout.CENTER);
 		
-		textArea = new JTextArea();
-		textArea.setText("Well done!");
-		textArea.setWrapStyleWord(true);
-		export.add(textArea);
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
-		// Initializing frames for each mode
-
-		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
-
-		JMenu mntmCipher = new JMenu("Cipher");
-		mntmCipher.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Methods.switchPanes("cipher");
-				System.out.println("Switched to cipher");
-			}
-
-		});
-		menuBar.add(mntmCipher);
-
-		JMenu mntmDatabase = new JMenu("Database");
-		mntmDatabase.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Methods.switchPanes("database");
-
-			}
-
-		});
-		menuBar.add(mntmDatabase);
-
-		JMenu mntmTest = new JMenu("Test");
-		mntmTest.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Methods.switchPanes("test");
-			}
-
-		});
-		menuBar.add(mntmTest);
-
-		JMenu mntmExport = new JMenu("Export");
-		mntmExport.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Methods.switchPanes("export");
-			}
-
-		});
-		menuBar.add(mntmExport);
+		JTabbedPane ciphers = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Ciphers", null, ciphers, null);
 		
-		//Adding MenuItems with Listeners to change frame.
-
+		JTabbedPane database = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Database", null, database, null);
+		
+		JTabbedPane test = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Test", null, test, null);
+		
+		JTabbedPane export = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Export", null, export, null);
 	}
 
 }

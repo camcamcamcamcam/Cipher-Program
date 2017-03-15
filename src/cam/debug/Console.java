@@ -19,26 +19,27 @@ public class Console {
 			case 2:
 				for (int i = 0; i < 27; i++) {
 					System.out.println(Ciphers.numbersToPlaintext(Ciphers.rotation(input, i)));
+
 				}
 				break;
 			case 3:
+				System.out.println(Ciphers.numbersToReverse(Ciphers.plaintextToNumbers(input)));
 				break;
 			case 4:
 				break;
 			case 5:
-				for (int i = 0; i < 27; i++) {
-					System.out.println(Ciphers.numbersToPhonetic(Ciphers.rotation(input, i)));
-				}
+				System.out.println(Ciphers.numbersToPhonetic(Ciphers.plaintextToNumbers(input)));
 				break;
 			case 6:
-				for (int i = 0; i < 27; i++) {
-					System.out.println(Ciphers.numbersToMorseCode(Ciphers.rotation(input, i)));
-				}
+				System.out.println(Ciphers.numbersToMorseCode(Ciphers.plaintextToNumbers(input)));
 				break;
 			case 7:
 				char[] key = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
 						's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 				System.out.println(Ciphers.vatsyayana(input, key));
+				break;
+			case 8:
+				System.out.println(Ciphers.keywordGen(input));
 			}
 
 		}

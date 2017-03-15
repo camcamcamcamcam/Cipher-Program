@@ -1,7 +1,7 @@
 package cam.database;
 
 public class Ciphers {
-	//TODO Ciphers: Reverse, Half-Reverse, Keyword, Vigenere, ENIGMA!
+	// TODO Ciphers: Keyword, Vigenere, ENIGMA!
 
 	// The 2D array below displays all the known substitution ciphers.
 	public static String[][] ciphers = {
@@ -112,7 +112,19 @@ public class Ciphers {
 			if (cipherNumbers[i] == 0) {
 				plaintext = plaintext + " ";
 			} else {
-				plaintext = plaintext + ciphers[1][cipherNumbers[i] - 1];
+				plaintext = plaintext + ciphers[1][cipherNumbers[i]];
+			}
+		}
+		return plaintext;
+	}
+
+	public static String numbersToReverse(int[] cipherNumbers) {
+		String plaintext = "";
+		for (int i = 0; i < cipherNumbers.length; i++) {
+			if (cipherNumbers[i] == 0) {
+				plaintext = plaintext + " ";
+			} else {
+				plaintext = plaintext + ciphers[0][26 - cipherNumbers[i]];
 			}
 		}
 		return plaintext;
@@ -129,6 +141,11 @@ public class Ciphers {
 			}
 		}
 		return cipherNumbers;
+	}
+
+	public static String halfReverse(String cipher) {
+		char[] decrypter = "anbocpdqerfsgthuivjwkxlymz".toCharArray();
+		return vatsyayana(cipher, decrypter);
 	}
 
 	public static String vatsyayana(String cipher, char[] decrypter) {
@@ -149,5 +166,28 @@ public class Ciphers {
 			}
 		}
 		return enciphered;
+	}
+
+	public static String keywordGen(String key) {
+		for (int i = 0; i < key.length(); i++) {
+			char charToReplace = key.charAt(i);
+			key = key.replaceAll("" + charToReplace, "");
+			System.out.println(key.substring(0, i) + "/" + charToReplace + "/" + key.substring(i));
+			key = key.substring(0, i) + charToReplace + key.substring(i);
+			System.out.println(key);
+		}
+		boolean letterFound = false;
+		for (int i = 0; i < 26; i++) {
+			for (int j = 0; j < key.length(); j++) {
+				letterFound = ("" + key.charAt(j)).equals(ciphers[0][i]);
+				if (letterFound) {
+					break;
+				}
+			} if (!letterFound) {
+				key = key + ciphers[0][i];
+			}
+		}
+		return key;
+		// TODO Make it start at that point of the alphabet, so "I love brussels sprouts" changes to ILOVEBRUSPTWXYZ..., not ILOVEBRUSPTACDF....
 	}
 }
