@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import java.awt.FlowLayout;
 
 public class Window {
 
@@ -42,20 +45,24 @@ public class Window {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		JTabbedPane menu = new JTabbedPane(JTabbedPane.TOP);
+		frame.getContentPane().add(menu, BorderLayout.CENTER);
 		
-		JTabbedPane ciphers = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Ciphers", null, ciphers, null);
+		JPanel ciphers = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) ciphers.getLayout();
+		menu.addTab("Ciphers", null, ciphers, null);
 		
-		JTabbedPane database = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Database", null, database, null);
+		JPanel database = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) database.getLayout();
+		menu.addTab("Database", null, database, null);
 		
-		JTabbedPane test = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Test", null, test, null);
+		JPanel test = new JPanel();
+		FlowLayout flowLayout_2 = (FlowLayout) test.getLayout();
+		menu.addTab("Test", null, test, null);
 		
-		JTabbedPane export = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Export", null, export, null);
+		JPanel export = new JPanel();
+		FlowLayout flowLayout_3 = (FlowLayout) export.getLayout();
+		menu.addTab("Export", null, export, null);
 	}
 
 }

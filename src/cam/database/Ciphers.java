@@ -177,17 +177,24 @@ public class Ciphers {
 			System.out.println(key);
 		}
 		boolean letterFound = false;
-		for (int i = 0; i < 26; i++) {
+		int endOfAlphabet = plaintextToNumbers("" + key.charAt(key.length() - 1))[0];
+		for (int i = endOfAlphabet; i < 26 + endOfAlphabet; i++) {
+			System.out.println(i);
+			System.out.println(26 + plaintextToNumbers("" + key.charAt(key.length() - 1))[0]);
 			for (int j = 0; j < key.length(); j++) {
-				letterFound = ("" + key.charAt(j)).equals(ciphers[0][i]);
+				letterFound = ("" + key.charAt(j)).equals(ciphers[0][i % 26]);
 				if (letterFound) {
 					break;
 				}
-			} if (!letterFound) {
-				key = key + ciphers[0][i];
+			}
+			if (!letterFound) {
+				key = key + ciphers[0][i % 26];
 			}
 		}
 		return key;
-		// TODO Make it start at that point of the alphabet, so "I love brussels sprouts" changes to ILOVEBRUSPTWXYZ..., not ILOVEBRUSPTACDF....
+		// Make it start at that point of the alphabet, so "I love brussels
+		// sprouts" changes to ILOVEBRUSPTWXYZ..., not ILOVEBRUSPTACDF.... (I
+		// found out why! The last letter is always changing, so I assigned its
+		// inital value to a constant int.)
 	}
 }
