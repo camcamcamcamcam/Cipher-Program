@@ -1,17 +1,43 @@
 package cam.database;
 
 public class Ciphers {
-	// TODO Ciphers: Keyword, Vigenere, ENIGMA!
+	// TODO Ciphers: Vigenere, ENIGMA!
+	// TODO Work out space and capital letters.
+
+	// This code removes all punctuation and capital letters.
+	public static String[] punctuationSeperator(String cipher) {
+		String[] plaintext = { cipher.toLowerCase(), cipher };
+		plaintext[0] = numbersToPlaintext(plaintextToNumbers(plaintext[0]));
+		for (int i = 0; i < cipher.length(); i++) {
+			for (int j = 0; j < 26; j++) {
+				if (("" + cipher.charAt(i)).equals(ciphers[0][j])) {
+					// If character is a letter, it is set to space.
+					plaintext[1] = plaintext[1].substring(0, i) + " " + plaintext[1].substring(i + 1);
+					System.out.println(plaintext[1]);
+					break;
+				}
+				if (("" + cipher.charAt(i)).equals(ciphers[3][j])) {
+					// If character is a capital letter, it is set to `.
+					plaintext[1] = plaintext[1].substring(0, i) + "`" + plaintext[1].substring(i + 1);
+					System.out.println(plaintext[1]);
+					break;
+				}
+			}
+		}
+		return plaintext;
+	}
 
 	// The 2D array below displays all the known substitution ciphers.
 	public static String[][] ciphers = {
 			{ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
 					"v", "w", "x", "y", "z" },
-			{ "Alfa", " Bravo", " Charlie", " Delta", " Echo", " Foxtrot", " Golf", " Hotel", " India", " Juliett",
-					" Kilo", " Lima", " Mike", " November", " Oscar", " Papa", " Quebec", " Romeo", " Sierra", " Tango",
-					" Uniform", " Victor", " Whiskey", " X-ray", " Yankee", " Zulu" },
+			{ "Alfa", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliett", "Kilo",
+					"Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform",
+					"Victor", "Whiskey", "X-ray", "Yankee", "Zulu" },
 			{ ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---",
-					".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." } };
+					".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." },
+			{ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+					"V", "W", "X", "Y", "Z" } };
 
 	// The string array below contains all the explanations of different
 	// ciphers. It is formatted like this: {Title, Explanation, Cracking,
@@ -60,19 +86,24 @@ public class Ciphers {
 	// The method below converts a string of text to an array of numbers. For
 	// example, "hello" would translate to {8, 5, 12, 12, 15}.
 	public static int[] plaintextToNumbers(String cipher) {
+
+		// Sets plaintext to lowercase.
 		cipher = cipher.toLowerCase();
+
 		int[] cipherNumbers = new int[cipher.length()];
+
+		// Goes through String and finds its place in the ciphers[][] array.
 		for (int i = 0; i < cipher.length(); i++) {
-			// System.out.println("Character " + i);
 			for (int j = 0; j < 26; j++) {
-				// System.out.print("Trying rot " + j + ": " + ciphers[0][j]);
 				if (("" + cipher.charAt(i)).equals(ciphers[0][j])) {
+
+					// Sets cell to the number + 1, so a = 1, not 0.
 					cipherNumbers[i] = j + 1;
-					// System.out.println("Success");
 					break;
 				}
 			}
 		}
+		// Characters that are not found are left as 0.
 		return cipherNumbers;
 	}
 
@@ -80,10 +111,14 @@ public class Ciphers {
 	// example, {8, 5, 12, 12, 15} would translate to "hello".
 	public static String numbersToPlaintext(int[] cipherNumbers) {
 		String plaintext = "";
+
+		// Goes through entire int[] array
 		for (int i = 0; i < cipherNumbers.length; i++) {
 			if (cipherNumbers[i] == 0) {
+				// Zeros are interpreted as spaces.
 				plaintext = plaintext + " ";
 			} else {
+				// Adds the corresponding letter to plaintext.
 				plaintext = plaintext + ciphers[0][cipherNumbers[i] - 1];
 			}
 		}
@@ -94,36 +129,51 @@ public class Ciphers {
 	// example, {8, 5, 12, 12, 15} would translate to "hello".
 	public static String numbersToMorseCode(int[] cipherNumbers) {
 		String plaintext = "";
+
+		// Goes through entire int[] array
 		for (int i = 0; i < cipherNumbers.length; i++) {
 			if (cipherNumbers[i] == 0) {
-				plaintext = plaintext + " ";
+				// Zeros are interpreted as slashes.
+				plaintext = plaintext + "/";
 			} else {
-				plaintext = plaintext + ciphers[2][cipherNumbers[i] - 1];
+				// Adds the corresponding Morse Pattern to plaintext.
+				plaintext = plaintext + ciphers[2][cipherNumbers[i] - 1] + "/";
 			}
 		}
 		return plaintext;
 	}
 
-	// The method below converts an array of numbers to a string of text. For
-	// example, {8, 5, 12, 12, 15} would translate to "hello".
+	// The method below converts an array of numbers to a string of text, in
+	// NATO phonetic speak. For
+	// example, {8, 5, 12, 12, 15} would translate to "Hotel Echo Lima Lima
+	// Oscar".
 	public static String numbersToPhonetic(int[] cipherNumbers) {
 		String plaintext = "";
+
+		// Goes through entire int[] array
 		for (int i = 0; i < cipherNumbers.length; i++) {
 			if (cipherNumbers[i] == 0) {
-				plaintext = plaintext + " ";
+				// Zeros are interpreted as full stops.
+				plaintext = plaintext + ". ";
 			} else {
-				plaintext = plaintext + ciphers[1][cipherNumbers[i]];
+				// Adds the corresponding letter to plaintext.
+				plaintext = plaintext + ciphers[1][cipherNumbers[i] - 1] + " ";
 			}
 		}
 		return plaintext;
+
 	}
 
 	public static String numbersToReverse(int[] cipherNumbers) {
 		String plaintext = "";
+
+		// Goes through entire int[] array
 		for (int i = 0; i < cipherNumbers.length; i++) {
 			if (cipherNumbers[i] == 0) {
+				// Zeros are interpreted as spaces.
 				plaintext = plaintext + " ";
 			} else {
+				// Adds the corresponding backwards letter to plaintext.
 				plaintext = plaintext + ciphers[0][26 - cipherNumbers[i]];
 			}
 		}
@@ -133,10 +183,15 @@ public class Ciphers {
 	// The method below rotates an array of numbers through a count of
 	// (rotationNumber). For example, {8, 5, 12, 12, 15} rotated through a count
 	// of 2 would become {10, 7, 14, 14, 17}.
+
 	public static int[] rotation(String cipher, int rotationNumber) {
+		// Turns string to lowercase letters
 		int[] cipherNumbers = plaintextToNumbers(cipher);
 		for (int i = 0; i < cipher.length(); i++) {
+			// If the character isn't a space, it rotates the character through
+			// the intended number of letters.
 			if (cipherNumbers[i] != 0) {
+				// They are rotated through the 26 letters i.e. % 26.
 				cipherNumbers[i] = (cipherNumbers[i] + rotationNumber) % 26 + 1;
 			}
 		}
@@ -145,6 +200,7 @@ public class Ciphers {
 
 	public static String halfReverse(String cipher) {
 		char[] decrypter = "anbocpdqerfsgthuivjwkxlymz".toCharArray();
+		// Calls vatsyayana using this constant decrypter.
 		return vatsyayana(cipher, decrypter);
 	}
 
@@ -152,11 +208,18 @@ public class Ciphers {
 		String enciphered = "";
 		for (int i = 0; i < cipher.length(); i++) {
 			for (int j = 0; j < decrypter.length; j++) {
+
+				// If the character is a space, it adds a space.
 				if (cipher.charAt(i) == ' ') {
 					enciphered = enciphered + " ";
 					break;
 				}
+
+				// When character is found in the decrypter array
 				if (cipher.charAt(i) == decrypter[j]) {
+					// If it is the first of a pair it changes it to the next,
+					// if it is the second it changes to the previous. This is
+					// how the 'paired' behaviour works.
 					if (j % 2 == 0) {
 						enciphered = enciphered + decrypter[j + 1];
 					} else {
@@ -169,32 +232,48 @@ public class Ciphers {
 	}
 
 	public static String keywordGen(String key) {
+		// Makes keyphrase lowercase and removes spaces
+		key = key.toLowerCase();
+		key = key.replaceAll(" ", "");
+
+		// Records character to remove duplicates of, removes all instances of
+		// it, then adds the first one back in. Does for all characters.
 		for (int i = 0; i < key.length(); i++) {
 			char charToReplace = key.charAt(i);
 			key = key.replaceAll("" + charToReplace, "");
-			System.out.println(key.substring(0, i) + "/" + charToReplace + "/" + key.substring(i));
 			key = key.substring(0, i) + charToReplace + key.substring(i);
-			System.out.println(key);
 		}
+
 		boolean letterFound = false;
+		// endOfAlphabet records where the keyword ends. This ensures rest of
+		// key is generated from the last letter, not from the start of the
+		// alphabet. The int is constant.
 		int endOfAlphabet = plaintextToNumbers("" + key.charAt(key.length() - 1))[0];
+
 		for (int i = endOfAlphabet; i < 26 + endOfAlphabet; i++) {
-			System.out.println(i);
-			System.out.println(26 + plaintextToNumbers("" + key.charAt(key.length() - 1))[0]);
 			for (int j = 0; j < key.length(); j++) {
 				letterFound = ("" + key.charAt(j)).equals(ciphers[0][i % 26]);
 				if (letterFound) {
+					// If letter is found, it moves on to the next letter.
 					break;
 				}
 			}
 			if (!letterFound) {
+				// If letter is never found, it adds it to the end.
 				key = key + ciphers[0][i % 26];
 			}
 		}
 		return key;
-		// Make it start at that point of the alphabet, so "I love brussels
-		// sprouts" changes to ILOVEBRUSPTWXYZ..., not ILOVEBRUSPTACDF.... (I
-		// found out why! The last letter is always changing, so I assigned its
-		// inital value to a constant int.)
+	}
+
+	public static String keywordCipher(String keyword, String cipher) {
+		int[] cipherNumbers = plaintextToNumbers(cipher);
+		String enciphered = "";
+		// Scrolls through the message and adds the corresponding letter from
+		// the keyword to the final string.
+		for (int i = 0; i < cipherNumbers.length; i++) {
+			enciphered = enciphered + keyword.charAt((cipherNumbers[i] + 25) % 26);
+		}
+		return enciphered;
 	}
 }

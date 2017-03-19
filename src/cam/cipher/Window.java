@@ -49,19 +49,19 @@ public class Window {
 		frame.getContentPane().add(menu, BorderLayout.CENTER);
 		
 		JPanel ciphers = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) ciphers.getLayout();
+		FlowLayout ciphers_flowLayout = (FlowLayout) ciphers.getLayout();
 		menu.addTab("Ciphers", null, ciphers, null);
 		
 		JPanel database = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) database.getLayout();
+		FlowLayout database_flowLayout = (FlowLayout) database.getLayout();
 		menu.addTab("Database", null, database, null);
 		
 		JPanel test = new JPanel();
-		FlowLayout flowLayout_2 = (FlowLayout) test.getLayout();
+		FlowLayout test_flowLayout = (FlowLayout) test.getLayout();
 		menu.addTab("Test", null, test, null);
 		
 		JPanel export = new JPanel();
-		FlowLayout flowLayout_3 = (FlowLayout) export.getLayout();
+		FlowLayout export_flowLayout = (FlowLayout) export.getLayout();
 		menu.addTab("Export", null, export, null);
 	}
 

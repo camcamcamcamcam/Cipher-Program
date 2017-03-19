@@ -7,7 +7,7 @@ public class Console {
 		while (true) {
 			String input = IBIO.input("Plaintext:");
 			switch (IBIO.inputInt(
-					"1: Number cipher, 2: Rotational cipher, 3: Reverse cipher, 4: Half-reverse cipher, 5: NATO Phonetic Alphabet, 6, Morse Code, 7: Vatsyayana Cipher, 8: Keyword Cipher, 9: Vigenere Cipher, 10: Enigma.")) {
+					"1: Number cipher, 2: Rotational cipher, 3: Reverse cipher, 4: Half-reverse cipher, 5: NATO Phonetic Alphabet, 6, Morse Code, 7: Vatsyayana Cipher, 8: Keyword Cipher, 9: Vigenere Cipher, 10: Enigma, 11: Formatter.")) {
 			default:
 				System.err.println("Invalid selection");
 				break;
@@ -26,6 +26,7 @@ public class Console {
 				System.out.println(Ciphers.numbersToReverse(Ciphers.plaintextToNumbers(input)));
 				break;
 			case 4:
+				System.out.println(Ciphers.halfReverse(input));
 				break;
 			case 5:
 				System.out.println(Ciphers.numbersToPhonetic(Ciphers.plaintextToNumbers(input)));
@@ -40,6 +41,10 @@ public class Console {
 				break;
 			case 8:
 				System.out.println(Ciphers.keywordGen(input));
+				System.out.println(Ciphers.keywordCipher(Ciphers.keywordGen(input), IBIO.input("Message")));
+			break;
+			case 11:
+				System.out.println(Ciphers.punctuationSeperator(input)[0]);
 			}
 
 		}
