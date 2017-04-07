@@ -2,12 +2,12 @@ package cam.cipher;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Frame;
 
 import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import java.awt.FlowLayout;
+import javax.swing.JTabbedPane;
 
 public class Window {
 
@@ -22,7 +22,7 @@ public class Window {
 				try {
 					Window window = new Window();
 					window.frame.setVisible(true);
-					window.frame.setExtendedState(window.frame.getExtendedState() | window.frame.MAXIMIZED_BOTH);
+					window.frame.setExtendedState(window.frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -2,7 +2,6 @@ package cam.database;
 
 public class Ciphers {
 	// TODO Ciphers: Vigenere, ENIGMA!
-	// TODO Work out space and capital letters.
 
 	// This code removes all punctuation and capital letters.
 	public static String[] punctuationSeperator(String cipher) {
@@ -22,9 +21,34 @@ public class Ciphers {
 					System.out.println(plaintext[1]);
 					break;
 				}
+				if (("" + cipher.charAt(i)).equals(" ")) {
+					// If character is a space, it is set to ~.
+					plaintext[1] = plaintext[1].substring(0, i) + "~" + plaintext[1].substring(i + 1);
+					System.out.println(plaintext[1]);
+					break;
+				}
 			}
 		}
 		return plaintext;
+	}
+
+	public static String formatter(String cipher, String format) {
+		for (int i = 0; i < cipher.length(); i++) {
+			if (format.charAt(i) == '~') {
+				// If the formatting has a ~, it replaces the character with a
+				// space.
+				cipher = cipher.substring(0, i) + " " + cipher.substring(i + 1);
+			} else if (format.charAt(i) == '`') {
+				// If the formatting has a `, it replaces the character with its
+				// capital.
+				cipher = cipher.substring(0, i) + ciphers[3][plaintextToNumbers("" + cipher.charAt(i))[0] - 1]
+						+ cipher.substring(i + 1);
+			} else if (format.charAt(i) != ' ') {
+				// If the formatting isn't space, ` or ~, then it replaces it.
+				cipher = cipher.substring(0, i) + format.charAt(i) + cipher.substring(i + 1);
+			}
+		}
+		return cipher;
 	}
 
 	// The 2D array below displays all the known substitution ciphers.
@@ -96,7 +120,6 @@ public class Ciphers {
 		for (int i = 0; i < cipher.length(); i++) {
 			for (int j = 0; j < 26; j++) {
 				if (("" + cipher.charAt(i)).equals(ciphers[0][j])) {
-
 					// Sets cell to the number + 1, so a = 1, not 0.
 					cipherNumbers[i] = j + 1;
 					break;

@@ -19,7 +19,9 @@ public class Console {
 			case 2:
 				for (int i = 0; i < 27; i++) {
 					System.out.println(Ciphers.numbersToPlaintext(Ciphers.rotation(input, i)));
-
+					System.out.println(Ciphers.formatter(
+							Ciphers.numbersToPlaintext(Ciphers.rotation(Ciphers.punctuationSeperator(input)[0], i)),
+							Ciphers.punctuationSeperator(input)[1]));
 				}
 				break;
 			case 3:
@@ -42,9 +44,11 @@ public class Console {
 			case 8:
 				System.out.println(Ciphers.keywordGen(input));
 				System.out.println(Ciphers.keywordCipher(Ciphers.keywordGen(input), IBIO.input("Message")));
-			break;
+				break;
 			case 11:
 				System.out.println(Ciphers.punctuationSeperator(input)[0]);
+				System.out.println(Ciphers.formatter(Ciphers.punctuationSeperator(input)[0],
+						Ciphers.punctuationSeperator(input)[1]));
 			}
 
 		}
