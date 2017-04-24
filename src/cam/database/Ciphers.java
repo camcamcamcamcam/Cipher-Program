@@ -3,6 +3,9 @@ package cam.database;
 public class Ciphers {
 	// TODO Ciphers: Vigenere, ENIGMA!
 
+	public static String[] namesOfCiphers = { "Number", "Rotational", "Reverse", "Half-reverse", "NATO Phonetic",
+			"Morse Code", "Vatsyayana", "Keyword", "Vigenere", "Enigma" };
+
 	// This code removes all punctuation and capital letters.
 	public static String[] punctuationSeperator(String cipher) {
 		String[] plaintext = { cipher.toLowerCase(), cipher };
