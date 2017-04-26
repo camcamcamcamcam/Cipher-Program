@@ -18,23 +18,23 @@ public class Console {
 				break;
 			case 2:
 				for (int i = 0; i < 27; i++) {
-					System.out.println(Ciphers.numbersToPlaintext(Ciphers.rotation(input, i)));
+					System.out.println(Ciphers.simpleConverter(Ciphers.rotation(input, i), "Plaintext"));
 					System.out.println(Ciphers.formatter(
-							Ciphers.numbersToPlaintext(Ciphers.rotation(Ciphers.punctuationSeperator(input)[0], i)),
+							Ciphers.simpleConverter(Ciphers.rotation(Ciphers.punctuationSeperator(input)[0], i), "Plaintext"),
 							Ciphers.punctuationSeperator(input)[1]));
 				}
 				break;
 			case 3:
-				System.out.println(Ciphers.numbersToReverse(Ciphers.plaintextToNumbers(input)));
+				System.out.println(Ciphers.simpleConverter(Ciphers.plaintextToNumbers(input), "Reverse"));
 				break;
 			case 4:
-				System.out.println(Ciphers.halfReverse(input));
+				System.out.println(Ciphers.simpleConverter(Ciphers.plaintextToNumbers(input), "Half-Reverse"));
 				break;
 			case 5:
-				System.out.println(Ciphers.numbersToPhonetic(Ciphers.plaintextToNumbers(input)));
+				System.out.println(Ciphers.simpleConverter(Ciphers.plaintextToNumbers(input), "NATO Phonetic"));
 				break;
 			case 6:
-				System.out.println(Ciphers.numbersToMorseCode(Ciphers.plaintextToNumbers(input)));
+				System.out.println(Ciphers.simpleConverter(Ciphers.plaintextToNumbers(input), "Morse Code"));
 				break;
 			case 7:
 				char[] key = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',

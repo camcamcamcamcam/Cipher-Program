@@ -2,47 +2,38 @@ package cam.database;
 
 public class Ciphers {
 	// The string array below contains all the explanations of different
-	// ciphers. It is formatted like this: {Title, Explanation, Cracking,
-	// Usage}.
+	// ciphers. It is formatted like this: {Title, Explanation, Usage}.
 	public static String[][] cipherInfo = {
+			{ "Plaintext", "This is the name for text that is not enciphered, i.e. readable.",
+					"This is the name for text that is not enciphered, i.e. readable." },
 			{ "Number cipher",
 					"This cipher converts letters to numbers corresponding to their place in the alphabet. For example, 1 stands for A, 2 stands for B, and so on.",
-					"To crack this, reverse the process",
 					"This is one of the easiest ciphers and one of the first that children learn." },
 			{ "Rotational cipher",
 					"This cipher rotates all letters a certain number of places in the alphabet. A ROT-1 cipher would change A to B, B to C, and so on until Z to A.",
-					"To crack this, you need only test 25 possible rotations.",
 					"This is a common cipher used in puzzle books or mystery novels." },
 			{ "Reverse cipher",
 					"This cipher substitutes all letters with their reverse, so A and Z switch places, B and Y switch, and so on.",
-					"To crack it, encipher it again to cancel it out.",
 					"This is a common cipher used in puzzle books or mystery novels." },
 			{ "Half-reverse cipher",
 					"This cipher is laid out with the first 13 letters directly above the last 13, so A = N, B = O, and so on. These are reversed also, so N = A, O = B etc.",
-					"To crack it, encipher it again to cancel it out.",
 					"This is a common cipher used in puzzle books or mystery novels." },
 			{ "NATO Phonetic Alphabet",
 					"This replaces all letters with a fixed word with the letter as its inital. For example, A = Alfa, B = Bravo.",
-					"To crack it, look at the initial of each word.",
 					"This is used in the Air Force as a means of communicating critcal codes regardless of the quality of the communication channel." },
 			{ "Morse Code", "This replaces letters with a series of dots and dashes.",
-					"To crack it, use the cipher to reverse it.",
 					"This is not a code, but was used in the early days of radios." },
 			{ "Vatsyayana cipher",
 					"This pairs up random letters to decipher into one another, for example Z could pair up with H, meaning H = Z and Z = H.",
-					"To crack it, try all 676 combinations of letters, or use Frequency Analysis.",
 					"This was used in Ancient India for women to send secret messages to attractive men without their wives finding out." },
 			{ "Keyword cipher",
 					"This is like the Vatsyayana cipher, but the letters do not decipher into another. If H = Z, Z doesn't have to = H. Also, the use of a keyword in the code helps it to be easy to remember. Simply write out the keyword without repeating a letter, then follow the alphabet to fill in all the letters you haven't written yet. For example, 'I love brussels sprouts' would become ILOVEBRUSPTWXYZACDFGHJKMNQ, and A = I, B = L, and so on.",
-					"To crack it, use Frequency Analysis.",
 					"This was used as a more secure and easy to remember approach to ensure messages are private." },
 			{ "Vigenere cipher",
 					"This cipher uses multiple rotational ciphers for a message, so ROT-4 may be used for every odd-numbered letter, and ROT-13 for the rest. To add security, use more ciphers. All your recipient needs to know is which ciphers you cycle through.",
-					"To crack it, use Babbage's method.",
 					"This was used during the American Civil War. It remained unbreakable for 3 centuries after it being invented." },
 			{ "Enigma cipher",
 					"This is like a Vigenere cipher, but uses several more wheels to scramble the message even more. All the wheels shift everytime, allowing 158,962,555,217,826,360,000 possible combinations.",
-					"To crack it, build a super computer.",
 					"This cipher was used by Nazi Germany during the Second World War." } };
 	// The 2D array below displays all the known substitution ciphers.
 	public static String[][] ciphers = {
@@ -57,19 +48,43 @@ public class Ciphers {
 					"V", "W", "X", "Y", "Z" } };
 	// TODO Ciphers: Vigenere, ENIGMA!
 
-	public static String[] namesOfCiphers = { "Detect", "Number", "Rotational", "Reverse", "Half-reverse",
+	public static String[] namesOfCiphers = { "Plaintext", "Number", "Rotational", "Reverse", "Half-reverse",
 			"NATO Phonetic", "Morse Code", "Vatsyayana", "Keyword", "Vigenere", "Enigma" };
 
 	public static String selectedCipher = "";
-	
+
 	public static String plaintextContents = "";
-	
+
 	public static String ciphertextContents = "";
+
+	// This code converts a string of numbers and slashes to an int array.
+	public static int[] intCaster(String cipher) {
+		// Initializes the array to return, and the two ints to help with
+		// substrings and slotting the correct numbers into the array.
+		int[] result = new int[cipher.length()];
+		int placeInArray = 0;
+		int startingPoint = 0;
+		// Goes through entire input string
+		for (int i = 0; i < cipher.length(); i++) {
+			// Tries to parse the current character into an int.
+			try {
+				Integer.parseInt("" + cipher.charAt(i));
+			} catch (NumberFormatException e) {
+				// It found a slash, so it slots the characters between the
+				// start (or last found slash) and the slash into the next empty
+				// place in the array.
+				result[placeInArray] = Integer.parseInt(cipher.substring(startingPoint, i));
+				placeInArray++;
+				startingPoint = i + 1;
+			}
+		}
+		return result;
+	}
 
 	// This code removes all punctuation and capital letters.
 	public static String[] punctuationSeperator(String cipher) {
 		String[] plaintext = { cipher.toLowerCase(), cipher };
-		plaintext[0] = numbersToPlaintext(plaintextToNumbers(plaintext[0]));
+		plaintext[0] = simpleConverter(plaintextToNumbers(plaintext[0]), "Plaintext", "Plaintext");
 		for (int i = 0; i < cipher.length(); i++) {
 			for (int j = 0; j < 26; j++) {
 				if (("" + cipher.charAt(i)).equals(ciphers[0][j])) {
@@ -94,6 +109,7 @@ public class Ciphers {
 
 	public static String formatter(String cipher, String format) {
 		for (int i = 0; i < cipher.length(); i++) {
+			System.out.println(i + cipher + cipher.length());
 			if (format.charAt(i) == '~') {
 				// If the formatting has a ~, it replaces the character with a
 				// space.
@@ -134,79 +150,6 @@ public class Ciphers {
 		return cipherNumbers;
 	}
 
-	// The method below converts an array of numbers to a string of text. For
-	// example, {8, 5, 12, 12, 15} would translate to "hello".
-	public static String numbersToPlaintext(int[] cipherNumbers) {
-		String plaintext = "";
-
-		// Goes through entire int[] array
-		for (int i = 0; i < cipherNumbers.length; i++) {
-			if (cipherNumbers[i] == 0) {
-				// Zeros are interpreted as spaces.
-				plaintext = plaintext + " ";
-			} else {
-				// Adds the corresponding letter to plaintext.
-				plaintext = plaintext + ciphers[0][cipherNumbers[i] - 1];
-			}
-		}
-		return plaintext;
-	}
-
-	// The method below converts an array of numbers to a string of text. For
-	// example, {8, 5, 12, 12, 15} would translate to "hello".
-	public static String numbersToMorseCode(int[] cipherNumbers) {
-		String plaintext = "";
-
-		// Goes through entire int[] array
-		for (int i = 0; i < cipherNumbers.length; i++) {
-			if (cipherNumbers[i] == 0) {
-				// Zeros are interpreted as slashes.
-				plaintext = plaintext + "/";
-			} else {
-				// Adds the corresponding Morse Pattern to plaintext.
-				plaintext = plaintext + ciphers[2][cipherNumbers[i] - 1] + "/";
-			}
-		}
-		return plaintext;
-	}
-
-	// The method below converts an array of numbers to a string of text, in
-	// NATO phonetic speak. For
-	// example, {8, 5, 12, 12, 15} would translate to "Hotel Echo Lima Lima
-	// Oscar".
-	public static String numbersToPhonetic(int[] cipherNumbers) {
-		String plaintext = "";
-
-		// Goes through entire int[] array
-		for (int i = 0; i < cipherNumbers.length; i++) {
-			if (cipherNumbers[i] == 0) {
-				// Zeros are interpreted as full stops.
-				plaintext = plaintext + ". ";
-			} else {
-				// Adds the corresponding letter to plaintext.
-				plaintext = plaintext + ciphers[1][cipherNumbers[i] - 1] + " ";
-			}
-		}
-		return plaintext;
-
-	}
-
-	public static String numbersToReverse(int[] cipherNumbers) {
-		String plaintext = "";
-
-		// Goes through entire int[] array
-		for (int i = 0; i < cipherNumbers.length; i++) {
-			if (cipherNumbers[i] == 0) {
-				// Zeros are interpreted as spaces.
-				plaintext = plaintext + " ";
-			} else {
-				// Adds the corresponding backwards letter to plaintext.
-				plaintext = plaintext + ciphers[0][26 - cipherNumbers[i]];
-			}
-		}
-		return plaintext;
-	}
-
 	// The method below rotates an array of numbers through a count of
 	// (rotationNumber). For example, {8, 5, 12, 12, 15} rotated through a count
 	// of 2 would become {10, 7, 14, 14, 17}.
@@ -225,10 +168,53 @@ public class Ciphers {
 		return cipherNumbers;
 	}
 
-	public static String halfReverse(String cipher) {
-		char[] decrypter = "anbocpdqerfsgthuivjwkxlymz".toCharArray();
-		// Calls vatsyayana using this constant decrypter.
-		return vatsyayana(cipher, decrypter);
+	public static String simpleConverter(int[] cipherNumbers, String startCipher, String endCipher) {
+		char zero = ' ';
+		int adder = -1;
+		int multiplier = 1;
+		int type = 0;
+		String natoSpace = "";
+
+		// It must be plaintext by now
+		switch (endCipher) {
+		default:
+			System.out.println(endCipher);
+			return "Haha, there's an error somewhere!";
+		case "Half-reverse":
+			// Shifts variables 13 places forward.
+			adder = 13;
+			break;
+		case "Reverse":
+			// Changes variables so that the character will be reversed.
+			adder = 26;
+			multiplier = -1;
+			break;
+		case "NATO Phonetic":
+			// Switches output alphabet to be NATO Phonetic.
+			type = 1;
+			zero = '.';
+			natoSpace = " ";
+			break;
+		case "Morse Code":
+			// Switches output alphabet to be Morse Code.
+			type = 2;
+			zero = '/';
+			break;
+		case "Plaintext":
+		}
+		String plaintext = "";
+
+		// Goes through entire int[] array
+		for (int i = 0; i < cipherNumbers.length; i++) {
+			if (cipherNumbers[i] == 0) {
+				// Zeros are interpreted as determined above.
+				plaintext = plaintext + zero;
+			} else {
+				// Adds the corresponding letter.
+				plaintext = plaintext + natoSpace + ciphers[type][(multiplier * cipherNumbers[i] + adder) % 27];
+			}
+		}
+		return plaintext;
 	}
 
 	public static String vatsyayana(String cipher, char[] decrypter) {
