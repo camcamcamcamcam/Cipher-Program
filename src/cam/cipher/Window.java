@@ -8,10 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,18 +17,14 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import cam.database.Ciphers;
+public class Window extends JFrame implements ActionListener {
 
-public class Window {
-	
-	JComboBox ciphers_selectCipher1, ciphers_selectcipher2;
-	JTextArea ciphers_ciphertext, ciphers_plaintext;
+	private static final long serialVersionUID = 5081443868281354460L;
+	static JComboBox<?> ciphers_selectCipher1, ciphers_selectCipher2;
+	JTextArea input, output;
 
 	private JFrame frame;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -46,16 +39,10 @@ public class Window {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public Window() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
@@ -74,75 +61,56 @@ public class Window {
 		ciphers.setLayout(gbl_ciphers);
 
 		ciphers_selectCipher1 = new JComboBox(Ciphers.namesOfCiphers);
-		ciphers_selectCipher1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Ciphers.selectedCipher = (String) ciphers_selectCipher1.getSelectedItem();
-			}
-		});
+		ciphers_selectCipher1.addActionListener(this);
 		GridBagConstraints gbc_ciphers_selectCipher = new GridBagConstraints();
 		gbc_ciphers_selectCipher.insets = new Insets(0, 0, 5, 5);
 		gbc_ciphers_selectCipher.fill = GridBagConstraints.HORIZONTAL;
 		gbc_ciphers_selectCipher.gridx = 0;
 		gbc_ciphers_selectCipher.gridy = 0;
 		ciphers.add(ciphers_selectCipher1, gbc_ciphers_selectCipher);
-		
-		ciphers_selectcipher2 = new JComboBox(Ciphers.namesOfCiphers);
+
+		ciphers_selectCipher2 = new JComboBox(Ciphers.namesOfCiphers);
+		ciphers_selectCipher2.addActionListener(this);
 		GridBagConstraints gbc_ciphers_selectcipher2 = new GridBagConstraints();
 		gbc_ciphers_selectcipher2.insets = new Insets(0, 0, 5, 0);
 		gbc_ciphers_selectcipher2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_ciphers_selectcipher2.gridx = 1;
 		gbc_ciphers_selectcipher2.gridy = 0;
-		ciphers.add(ciphers_selectcipher2, gbc_ciphers_selectcipher2);
+		ciphers.add(ciphers_selectCipher2, gbc_ciphers_selectcipher2);
 
-		ciphers_ciphertext = new JTextArea();
-		ciphers_ciphertext.setLineWrap(true);
-		ciphers_ciphertext.setWrapStyleWord(true);
-		GridBagConstraints gbc_ciphers_ciphertext = new GridBagConstraints();
-		gbc_ciphers_ciphertext.insets = new Insets(0, 0, 5, 5);
-		gbc_ciphers_ciphertext.fill = GridBagConstraints.BOTH;
-		gbc_ciphers_ciphertext.gridx = 0;
-		gbc_ciphers_ciphertext.gridy = 1;
-		ciphers.add(ciphers_ciphertext, gbc_ciphers_ciphertext);
+		input = new JTextArea();
+		input.setLineWrap(true);
+		input.setWrapStyleWord(true);
+		GridBagConstraints gbc_input = new GridBagConstraints();
+		gbc_input.insets = new Insets(0, 0, 5, 5);
+		gbc_input.fill = GridBagConstraints.BOTH;
+		gbc_input.gridx = 0;
+		gbc_input.gridy = 1;
+		ciphers.add(input, gbc_input);
 
-		ciphers_plaintext = new JTextArea();
-		ciphers_plaintext.setLineWrap(true);
-		ciphers_plaintext.setWrapStyleWord(true);
-		GridBagConstraints gbc_ciphers_plaintext = new GridBagConstraints();
-		gbc_ciphers_plaintext.insets = new Insets(0, 0, 5, 0);
-		gbc_ciphers_plaintext.fill = GridBagConstraints.BOTH;
-		gbc_ciphers_plaintext.gridx = 1;
-		gbc_ciphers_plaintext.gridy = 1;
-		ciphers.add(ciphers_plaintext, gbc_ciphers_plaintext);
+		output = new JTextArea();
+		output.setLineWrap(true);
+		output.setWrapStyleWord(true);
+		output.setEditable(false);
+		GridBagConstraints gbc_output = new GridBagConstraints();
+		gbc_output.insets = new Insets(0, 0, 5, 0);
+		gbc_output.fill = GridBagConstraints.BOTH;
+		gbc_output.gridx = 1;
+		gbc_output.gridy = 1;
+		ciphers.add(output, gbc_output);
 
-		ciphers_plaintext.addFocusListener(new FocusListener() {
+		JLabel lblInput = new JLabel("Input");
+		GridBagConstraints gbc_lblInput = new GridBagConstraints();
+		gbc_lblInput.insets = new Insets(0, 0, 0, 5);
+		gbc_lblInput.gridx = 0;
+		gbc_lblInput.gridy = 2;
+		ciphers.add(lblInput, gbc_lblInput);
 
-			@Override
-			public void focusGained(FocusEvent e) {
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (ciphers_plaintext.isEditable()) {
-					Ciphers.plaintextContents = ciphers_plaintext.getText();
-					ciphers_ciphertext.setEditable(Ciphers.plaintextContents.equals(""));
-				}
-			}
-		});
-		ciphers_ciphertext.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusGained(FocusEvent e) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (ciphers_ciphertext.isEditable()) {
-					Ciphers.ciphertextContents = ciphers_ciphertext.getText();
-					ciphers_plaintext.setEditable(Ciphers.ciphertextContents.equals(""));
-				}
-			}
-		});
+		JLabel lblOutput = new JLabel("Output");
+		GridBagConstraints gbc_lblOutput = new GridBagConstraints();
+		gbc_lblOutput.gridx = 1;
+		gbc_lblOutput.gridy = 2;
+		ciphers.add(lblOutput, gbc_lblOutput);
 
 		JPanel database = new JPanel();
 		menu.addTab("Database", null, database, null);
@@ -235,120 +203,58 @@ public class Window {
 	}
 
 	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == ciphers_selectCipher1){
-			if (ciphers_plaintext.isEditable()) {
-				Ciphers.plaintextContents = ciphers_plaintext.getText();
-			}
-			if (ciphers_ciphertext.isEditable()) {
-				Ciphers.ciphertextContents = ciphers_ciphertext.getText();
-			}
-			if (Ciphers.ciphertextContents.equals("") && Ciphers.plaintextContents.equals("")) {
-				JOptionPane.showMessageDialog(frame, "Type something in one of the text boxes.",
-						"Well, that was easy", JOptionPane.ERROR_MESSAGE);
-			}
-			// If there is text in the plaintext box
-
-			else if (Ciphers.ciphertextContents.equals("")) {
-				switch (Ciphers.selectedCipher) {
-				default:
-					// If it is Reverse, Half-reverse, NATO Phonetic or
-					// Morse Code.
-					if (Ciphers.selectedCipher.equals("Reverse") || Ciphers.selectedCipher.equals("Half-reverse")) {
-						ciphers_ciphertext.setText(Ciphers.formatter(
-								Ciphers.simpleConverter(
-										Ciphers.plaintextToNumbers(
-												Ciphers.punctuationSeperator(Ciphers.plaintextContents)[0]),
-										Ciphers.selectedCipher),
-								Ciphers.punctuationSeperator(Ciphers.plaintextContents)[1]));
-					} else {
-						ciphers_ciphertext.setText(Ciphers.simpleConverter(
-								Ciphers.plaintextToNumbers(
-										Ciphers.punctuationSeperator(Ciphers.plaintextContents)[0]),
-								Ciphers.selectedCipher));
-					}
-
-				case "Detect":
-					break;
-				case "Number":
-					String ciphertext = "";
-					for (int i = 0; i < Ciphers.plaintextToNumbers(Ciphers.plaintextContents).length; i++) {
-						ciphertext = ciphertext + Ciphers.plaintextToNumbers(Ciphers.plaintextContents)[i] + "/";
-					}
-					ciphers_ciphertext.setText(ciphertext);
-					break;
-				case "Rotational":
-					ciphers_ciphertext
-							.setText(Ciphers
-									.formatter(
-											Ciphers.simpleConverter(Ciphers.rotation(
-													Ciphers.punctuationSeperator(Ciphers.plaintextContents)[0],
-													Integer.parseInt(
-															JOptionPane.showInputDialog(frame, "What rotation?"))
-															- 1),
-													"Plaintext"),
-											Ciphers.punctuationSeperator(Ciphers.plaintextContents)[1]));
-
-					break;
-				case "Vatsyayana":
-					ciphers_ciphertext.setText(Ciphers.formatter(
-							Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.plaintextContents)[0],
-									JOptionPane.showInputDialog(frame, "Type the order of your paired letters")
-											.toCharArray()),
-							Ciphers.punctuationSeperator(Ciphers.plaintextContents)[1]));
-					break;
-				case "Keyword":
-					ciphers_ciphertext
-							.setText(
-									Ciphers.formatter(
-											Ciphers.keywordCipher(
-													Ciphers.keywordGen(Ciphers.punctuationSeperator(JOptionPane
-															.showInputDialog(frame, "Type your keyword."))[0]),
-													Ciphers.plaintextContents),
-											Ciphers.punctuationSeperator(Ciphers.plaintextContents)[1]));
-					break;
-				case "Vigenere":
-					break;
-				case "Enigma":
-				}
-				// If there is text in the ciphertext box
+		Ciphers.selectedCipher1 = (String) ciphers_selectCipher1.getSelectedItem();
+		Ciphers.selectedCipher2 = (String) ciphers_selectCipher2.getSelectedItem();
+		Ciphers.textContents1 = (String) input.getText();
+		System.out.println(Ciphers.selectedCipher1 + "/" + Ciphers.selectedCipher2);
+		switch (Ciphers.selectedCipher1) {
+		default:
+			// If it is Reverse, Half-reverse, NATO Phonetic or
+			// Morse Code.
+			if (Ciphers.selectedCipher1.equals("Reverse") || Ciphers.selectedCipher1.equals("Half-reverse")
+					|| Ciphers.selectedCipher2.equals("Reverse") || Ciphers.selectedCipher2.equals("Half-reverse")) {
+				Ciphers.textContents2 = Ciphers.formatter(
+						Ciphers.simpleConverter(Ciphers.punctuationSeperator(Ciphers.textContents1)[0]),
+						Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
 			} else {
-				switch (Ciphers.selectedCipher) {
-				default:
-					// If it is Reverse or Half-reverse
-					if (Ciphers.selectedCipher.equals("Reverse") || Ciphers.selectedCipher.equals("Half-reverse")) {
-						ciphers_plaintext
-								.setText(
-										Ciphers.formatter(
-												Ciphers.simpleConverter(
-														Ciphers.plaintextToNumbers(Ciphers.punctuationSeperator(
-																Ciphers.ciphertextContents)[0]),
-														Ciphers.selectedCipher),
-												Ciphers.punctuationSeperator(Ciphers.ciphertextContents)[1]));
-					} else {
-						ciphers_plaintext.setText(Ciphers.simpleConverter(
-								Ciphers.plaintextToNumbers(
-										Ciphers.punctuationSeperator(Ciphers.ciphertextContents)[0]),
-								Ciphers.selectedCipher));
-					}
-				case "Detect":
-					break;
-				case "Number":
-					ciphers_plaintext.setText(Ciphers
-							.simpleConverter(Ciphers.intCaster(Ciphers.ciphertextContents), "Plaintext").trim());
-					break;
-				case "Rotational":
-					// TODO will need to add dictionary.
-					break;
-				case "Vatsyayana":
-					break;
-				case "Keyword":
-					break;
-				case "Vigenere":
-					break;
-				case "Enigma":
-				}
+				Ciphers.textContents2 = Ciphers.simpleConverter(Ciphers.punctuationSeperator(Ciphers.textContents1)[0]);
 			}
+			break;
+		case "Detect":
+			break;
+		case "Number":
+			String ciphertext = "";
+			for (int i = 0; i < Ciphers.plaintextToNumbers(Ciphers.textContents1).length; i++) {
+				ciphertext = ciphertext + Ciphers.plaintextToNumbers(Ciphers.textContents1)[i] + "/";
+			}
+			Ciphers.textContents2 = ciphertext;
+			break;
+		case "Rotational":
+			Ciphers.textContents2 = Ciphers.formatter(
+					Ciphers.simpleConverter(Ciphers
+							.numbersToPlaintext(Ciphers.rotation(Ciphers.punctuationSeperator(Ciphers.textContents1)[0],
+									Integer.parseInt(JOptionPane.showInputDialog(frame, "What rotation?")) - 1))),
+					Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
+
+			break;
+		case "Vatsyayana":
+			Ciphers.textContents2 = Ciphers.formatter(
+					Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.textContents1)[0],
+							JOptionPane.showInputDialog(frame, "Type the order of your paired letters").toCharArray()),
+					Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
+			break;
+		case "Keyword":
+			Ciphers.textContents2 = Ciphers.formatter(Ciphers.keywordCipher(
+					Ciphers.keywordGen(
+							Ciphers.punctuationSeperator(JOptionPane.showInputDialog(frame, "Type your keyword."))[0]),
+					Ciphers.textContents1), Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
+			break;
+		case "Vigenere":
+			break;
+		case "Enigma":
 		}
-		}
+		System.out.println(Ciphers.textContents2);
+		output.setText(Ciphers.textContents2);
 	}
 
+}
