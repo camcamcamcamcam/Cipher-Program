@@ -23,7 +23,7 @@ public class Window extends JFrame implements ActionListener {
 	static JComboBox<?> ciphers_selectCipher1, ciphers_selectCipher2;
 	JTextArea input, output;
 
-	private JFrame frame;
+	static JFrame frame;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -180,9 +180,6 @@ public class Window extends JFrame implements ActionListener {
 					break;
 				case "Vigenere":
 					cipherNumber = 9;
-					break;
-				case "Enigma":
-					cipherNumber = 10;
 				}
 				database_howTo.setText(Ciphers.cipherInfo[cipherNumber][1]);
 				database_history.setText(Ciphers.cipherInfo[cipherNumber][2]);
@@ -203,58 +200,72 @@ public class Window extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent event) {
+
+		// Fetches selected ciphers and text entered.
 		Ciphers.selectedCipher1 = (String) ciphers_selectCipher1.getSelectedItem();
 		Ciphers.selectedCipher2 = (String) ciphers_selectCipher2.getSelectedItem();
-		Ciphers.textContents1 = (String) input.getText();
-		System.out.println(Ciphers.selectedCipher1 + "/" + Ciphers.selectedCipher2);
+		Ciphers.textContents = (String) input.getText();
+		Ciphers.plaintextContents = new int[Ciphers.textContents.length()];
+
+		// Converts to plaintext.
 		switch (Ciphers.selectedCipher1) {
 		default:
-			// If it is Reverse, Half-reverse, NATO Phonetic or
-			// Morse Code.
-			if (Ciphers.selectedCipher1.equals("Reverse") || Ciphers.selectedCipher1.equals("Half-reverse")
-					|| Ciphers.selectedCipher2.equals("Reverse") || Ciphers.selectedCipher2.equals("Half-reverse")) {
-				Ciphers.textContents2 = Ciphers.formatter(
-						Ciphers.simpleConverter(Ciphers.punctuationSeperator(Ciphers.textContents1)[0]),
-						Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
-			} else {
-				Ciphers.textContents2 = Ciphers.simpleConverter(Ciphers.punctuationSeperator(Ciphers.textContents1)[0]);
-			}
+			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.punctuationSeperator(Ciphers.textContents)[0]);
 			break;
-		case "Detect":
+		case "Number":
+			Ciphers.plaintextContents = Ciphers.intCaster(Ciphers.textContents);
+			break;
+		case "NATO Phonetic":
+			break;
+		case "Morse Code":
+			break;
+		case "Vatsyayana":
+			break;
+		case "Keyword":
+			break;
+		case "Vigenere":
+		}
+
+		switch (Ciphers.selectedCipher2) {
+		default:
+			if (Ciphers.selectedCipher1.equals("Number")) {
+				output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents).trim());
+			} else {
+				output.setText(Ciphers.formatter(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
+						Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
+			}
 			break;
 		case "Number":
 			String ciphertext = "";
-			for (int i = 0; i < Ciphers.plaintextToNumbers(Ciphers.textContents1).length; i++) {
-				ciphertext = ciphertext + Ciphers.plaintextToNumbers(Ciphers.textContents1)[i] + "/";
+			for (int i = 0; i < Ciphers.textContents.length(); i++) {
+				ciphertext = ciphertext + Ciphers.plaintextContents[i] + "/";
 			}
-			Ciphers.textContents2 = ciphertext;
+			while (ciphertext.substring(ciphertext.length() - 2, ciphertext.length()).equals("0/")) {
+				ciphertext = ciphertext.substring(0, ciphertext.length() - 2);
+			}
+			output.setText(ciphertext);
 			break;
-		case "Rotational":
-			Ciphers.textContents2 = Ciphers.formatter(
-					Ciphers.simpleConverter(Ciphers
-							.numbersToPlaintext(Ciphers.rotation(Ciphers.punctuationSeperator(Ciphers.textContents1)[0],
-									Integer.parseInt(JOptionPane.showInputDialog(frame, "What rotation?")) - 1))),
-					Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
-
+		case "NATO Phonetic":
+			output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents));
+			break;
+		case "Morse Code":
+			output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents));
 			break;
 		case "Vatsyayana":
-			Ciphers.textContents2 = Ciphers.formatter(
-					Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.textContents1)[0],
+			output.setText(Ciphers.formatter(
+					Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.textContents)[0],
 							JOptionPane.showInputDialog(frame, "Type the order of your paired letters").toCharArray()),
-					Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
+					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
 			break;
 		case "Keyword":
-			Ciphers.textContents2 = Ciphers.formatter(Ciphers.keywordCipher(
+			output.setText(Ciphers.formatter(Ciphers.keywordCipher(
 					Ciphers.keywordGen(
 							Ciphers.punctuationSeperator(JOptionPane.showInputDialog(frame, "Type your keyword."))[0]),
-					Ciphers.textContents1), Ciphers.punctuationSeperator(Ciphers.textContents1)[1]);
+					Ciphers.textContents), Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
 			break;
 		case "Vigenere":
-			break;
-		case "Enigma":
 		}
-		System.out.println(Ciphers.textContents2);
-		output.setText(Ciphers.textContents2);
+
 	}
 
 }
