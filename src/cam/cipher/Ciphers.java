@@ -58,26 +58,69 @@ public class Ciphers {
 	public static String textContents = "";
 	public static int[] plaintextContents;
 
-	// This code converts a string of numbers and slashes to an int array. (Used
-	// only for the number code)
-	public static int[] intCaster(String text) {
+	// This code converts a string of numbers, NATO keywords or Morse code and
+	// seperator to an int array.
+	public static int[] caster(String text) {
 		// Initializes the array to return, and the two ints to help with
 		// substrings and slotting the correct numbers into the array.
 		int[] result = new int[text.length()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = -1;
+		}
 		int placeInArray = 0;
 		int startingPoint = 0;
+		String output = "";
 		// Goes through entire input string
-		for (int i = 0; i < text.length(); i++) {
-			// Tries to parse the current character into an int.
-			try {
-				Integer.parseInt("" + text.charAt(i));
-			} catch (NumberFormatException e) {
-				// It found a slash, so it slots the characters between the
-				// start (or last found slash) and the slash into the next empty
-				// place in the array.
-				result[placeInArray] = Integer.parseInt(text.substring(startingPoint, i));
-				placeInArray++;
-				startingPoint = i + 1;
+		switch (selectedCipher1) {
+		case "Number":
+			for (int i = 0; i < text.length(); i++) {
+				// Tries to parse the current character into an int.
+				try {
+					Integer.parseInt("" + text.charAt(i));
+				} catch (NumberFormatException e) {
+					// It found a slash, so it slots the characters between the
+					// start (or last found slash) and the slash into the next
+					// empty
+					// place in the array.
+					result[placeInArray] = Integer.parseInt(text.substring(startingPoint, i));
+					if (result[placeInArray] == 26) {
+						result[placeInArray] = 0;
+					}
+					if (result[placeInArray] == 0) {
+						result[placeInArray] = -1;
+					}
+					placeInArray++;
+					startingPoint = i + 1;
+				}
+			}
+			break;
+		case "NATO Phonetic":
+			for (int i = 0; i < text.length(); i++) {
+				if ((text.charAt(i) == ' ' || text.charAt(i) == '.') && i != text.length() - 1) {
+					output += text.charAt(i + 1);
+					System.out.println("Output: " + output);
+				}
+
+			}
+			result = inputToPlaintext(output.toLowerCase());
+			break;
+		case "Morse Code":
+			for (int i = 1; i < text.length(); i++) {
+				if (text.charAt(i) == '/') {
+					System.out.println(text.substring(startingPoint + 1, i));
+					for (int j = 0; j < ciphers[2].length; j++) {
+						System.out.println("Testing: " + ciphers[2][j]);
+						System.out.println("startingPoint = " + startingPoint + ", j = " + j);
+						if (text.substring(startingPoint + 1, i).equals(ciphers[2][j])) {
+							System.out.println("found: " + j);
+							result[placeInArray] = j + 1;
+							j = 0;
+							placeInArray++;
+							startingPoint = i;
+							i++;
+						}
+					}
+				}
 			}
 		}
 		return result;
@@ -137,6 +180,9 @@ public class Ciphers {
 	public static int[] inputToPlaintext(String text) {
 
 		int[] cipherNumbers = new int[text.length()];
+		for (int i = 0; i < cipherNumbers.length; i++) {
+			cipherNumbers[i] = -1;
+		}
 		int adder = -1;
 		int multiplier = 1;
 		int type = 0;
@@ -158,37 +204,20 @@ public class Ciphers {
 			adder = 26;
 			multiplier = -1;
 			type = 0;
-			break;
-		case "NATO Phonetic":
-			// Switches output alphabet to be NATO Phonetic.
-			adder = -1;
-			multiplier = 1;
-			type = 1;
-			break;
-		case "Morse Code":
-			// Switches output alphabet to be Morse Code.
-			adder = -1;
-			multiplier = 1;
-			type = 2;
-			break;
-		case "Plaintext":
 		}
 		// Goes through String and finds its place in the ciphers[][] array.
 		for (int i = 0; i < text.length(); i++) {
 			for (int j = 0; j < 26; j++) {
 				if (("" + text.charAt(i)).equals(ciphers[type][j])) {
 					System.out.println(text.charAt(i) + " equals " + j);
-					// Sets cell to the number + 1, so a = 1, not 0.
-					System.out.println("j =" + j + ", adder = " + adder + ", multiplier =" + multiplier);
+					System.out.println("j = " + j + ", adder = " + adder + ", multiplier = " + multiplier);
 					cipherNumbers[i] = ((j - adder) * multiplier + 26) % 26;
 					System.out.println(cipherNumbers[i]);
 					break;
-					// TODO This would need to change for the morse code and
-					// nato alphabet.
 				}
 			}
 		}
-		// Characters that are not found are left as 0.
+		// Characters that are not found are left as -1.
 		return cipherNumbers;
 	}
 
@@ -204,11 +233,6 @@ public class Ciphers {
 		String letterBreak = "";
 		System.out.println("Switching");
 		switch (selectedCipher2) {
-		default:
-			return "Haha, there's an error somewhere!" + selectedCipher2;
-		case "Number":
-
-			break;
 		case "Rotational":
 			adder = Integer.parseInt(JOptionPane.showInputDialog(Window.frame, "What rotation?")) - 1;
 			break;
@@ -237,33 +261,18 @@ public class Ciphers {
 		}
 		// Goes through entire int[] array
 		for (int i = 0; i < cipherNumbers.length; i++) {
-			if (cipherNumbers[i] == 0) {
+			if (cipherNumbers[i] == -1) {
 				// Zeros are interpreted as determined above.
 				output = output + zero;
 			} else {
 				// Adds the corresponding letter.
-				output = output + natoSpace + letterBreak + ciphers[type][(multiplier * cipherNumbers[i] + adder) % 26];
+				output = output + natoSpace + letterBreak
+						+ ciphers[type][(multiplier * cipherNumbers[i] + adder + 26) % 26];
 			}
 
 		}
+		output += letterBreak;
 		return output;
-	}
-
-	// The method below rotates an array of numbers through a count of
-	// (rotationNumber). For example, {8, 5, 12, 12, 15} rotated through a count
-	// of 2 would become {10, 7, 14, 14, 17}.
-	public static int[] rotation(String text, int rotationNumber) {
-		// Turns string to lowercase letters
-		int[] cipherNumbers = inputToPlaintext(text);
-		for (int i = 0; i < text.length(); i++) {
-			// If the character isn't a space, it rotates the character through
-			// the intended number of letters.
-			if (cipherNumbers[i] != 0) {
-				// They are rotated through the 26 letters i.e. % 26.
-				cipherNumbers[i] = (cipherNumbers[i] + rotationNumber) % 26 + 1;
-			}
-		}
-		return cipherNumbers;
 	}
 
 	public static String vatsyayana(String text, char[] decrypter) {

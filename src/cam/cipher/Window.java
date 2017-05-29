@@ -207,17 +207,24 @@ public class Window extends JFrame implements ActionListener {
 		Ciphers.textContents = (String) input.getText();
 		Ciphers.plaintextContents = new int[Ciphers.textContents.length()];
 
+		boolean simpleCipher = false;
+
 		// Converts to plaintext.
 		switch (Ciphers.selectedCipher1) {
 		default:
 			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.punctuationSeperator(Ciphers.textContents)[0]);
 			break;
 		case "Number":
-			Ciphers.plaintextContents = Ciphers.intCaster(Ciphers.textContents);
+			if (Ciphers.textContents.charAt(Ciphers.textContents.length() - 1) != '/') {
+				Ciphers.textContents += "/";
+			}
+			simpleCipher = true;
 			break;
 		case "NATO Phonetic":
+			simpleCipher = true;
 			break;
 		case "Morse Code":
+			simpleCipher = true;
 			break;
 		case "Vatsyayana":
 			break;
@@ -225,10 +232,17 @@ public class Window extends JFrame implements ActionListener {
 			break;
 		case "Vigenere":
 		}
-
+		if (simpleCipher) {
+			Ciphers.plaintextContents = Ciphers.caster(Ciphers.textContents);
+		}
+		
+		for (int i = 0; i < Ciphers.plaintextContents.length; i++){
+			System.out.println(Ciphers.plaintextContents[i]);
+		}
 		switch (Ciphers.selectedCipher2) {
 		default:
-			if (Ciphers.selectedCipher1.equals("Number")) {
+			// default is for Reverse, Half Reverse, Rotational, and Plaintext.
+			if (simpleCipher) {
 				output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents).trim());
 			} else {
 				output.setText(Ciphers.formatter(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
@@ -237,11 +251,17 @@ public class Window extends JFrame implements ActionListener {
 			break;
 		case "Number":
 			String ciphertext = "";
-			for (int i = 0; i < Ciphers.textContents.length(); i++) {
+			for (int i = 0; i < Ciphers.plaintextContents.length; i++) {
+				if (Ciphers.plaintextContents[i] == 0) {
+					Ciphers.plaintextContents[i] = 26;
+				}
+				if (Ciphers.plaintextContents[i] == -1){
+					Ciphers.plaintextContents[i] = 0;
+				}
 				ciphertext = ciphertext + Ciphers.plaintextContents[i] + "/";
 			}
-			while (ciphertext.substring(ciphertext.length() - 2, ciphertext.length()).equals("0/")) {
-				ciphertext = ciphertext.substring(0, ciphertext.length() - 2);
+			while (ciphertext.substring(ciphertext.length() - 3, ciphertext.length()).equals("-1/")) {
+				ciphertext = ciphertext.substring(0, ciphertext.length() - 3);
 			}
 			output.setText(ciphertext);
 			break;
