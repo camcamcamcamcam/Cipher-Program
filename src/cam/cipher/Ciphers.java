@@ -32,8 +32,8 @@ public class Ciphers {
 					"This is like the Vatsyayana cipher, but the letters do not decipher into another. If H = Z, Z doesn't have to = H. Also, the use of a keyword in the code helps it to be easy to remember. Simply write out the keyword without repeating a letter, then follow the alphabet to fill in all the letters you haven't written yet. For example, 'I love brussels sprouts' would become ILOVEBRUSPTWXYZACDFGHJKMNQ, and A = I, B = L, and so on.",
 					"This was used as a more secure and easy to remember approach to ensure messages are private." },
 			{ "Vigenere cipher",
-					"This cipher uses multiple rotational ciphers for a message, so ROT-4 may be used for every odd-numbered letter, and ROT-13 for the rest. To add security, use more ciphers. All your recipient needs to know is which ciphers you cycle through.",
-					"This was used during the American Civil War. It remained unbreakable for 3 centuries after it being invented." }, };
+					"This cipher uses a keyword just like the keyword cipher, but the letters stand not for which letter it is swapped with, but what magnitude of rotation is used on each letter.",
+					"This was used during the American Civil War. It remained unbreakable for 3 centuries after it being invented." } };
 
 	// The 2D array below displays all the known substitution ciphers.
 	public static final String[][] ciphers = {
@@ -85,9 +85,11 @@ public class Ciphers {
 					result[placeInArray] = Integer.parseInt(text.substring(startingPoint, i));
 					if (result[placeInArray] == 26) {
 						result[placeInArray] = 0;
+						// Switches the 26s back to 0s for the computer 'z'
 					}
 					if (result[placeInArray] == 0) {
 						result[placeInArray] = -1;
+						// Switches the 0s back to -1s for the computer ' '
 					}
 					placeInArray++;
 					startingPoint = i + 1;
@@ -98,7 +100,6 @@ public class Ciphers {
 			for (int i = 0; i < text.length(); i++) {
 				if ((text.charAt(i) == ' ' || text.charAt(i) == '.') && i != text.length() - 1) {
 					output += text.charAt(i + 1);
-					System.out.println("Output: " + output);
 				}
 
 			}
@@ -107,12 +108,8 @@ public class Ciphers {
 		case "Morse Code":
 			for (int i = 1; i < text.length(); i++) {
 				if (text.charAt(i) == '/') {
-					System.out.println(text.substring(startingPoint + 1, i));
 					for (int j = 0; j < ciphers[2].length; j++) {
-						System.out.println("Testing: " + ciphers[2][j]);
-						System.out.println("startingPoint = " + startingPoint + ", j = " + j);
 						if (text.substring(startingPoint + 1, i).equals(ciphers[2][j])) {
-							System.out.println("found: " + j);
 							result[placeInArray] = j + 1;
 							j = 0;
 							placeInArray++;
@@ -152,9 +149,7 @@ public class Ciphers {
 	}
 
 	public static String formatter(String text, String format) {
-		System.out.println("CIPHER: " + text);
 		for (int i = 0; i < text.length(); i++) {
-			System.out.println(i + text + text.length());
 			if (format.charAt(i) == '~') {
 				// If the formatting has a ~, it replaces the character with a
 				// space.
@@ -186,7 +181,6 @@ public class Ciphers {
 		int adder = -1;
 		int multiplier = 1;
 		int type = 0;
-		System.out.println("switching: " + text);
 		switch (selectedCipher1) {
 		case "Rotational":
 			adder = Integer.parseInt(JOptionPane.showInputDialog(Window.frame, "What rotation?")) - 1;
@@ -209,10 +203,7 @@ public class Ciphers {
 		for (int i = 0; i < text.length(); i++) {
 			for (int j = 0; j < 26; j++) {
 				if (("" + text.charAt(i)).equals(ciphers[type][j])) {
-					System.out.println(text.charAt(i) + " equals " + j);
-					System.out.println("j = " + j + ", adder = " + adder + ", multiplier = " + multiplier);
 					cipherNumbers[i] = ((j - adder) * multiplier + 26) % 26;
-					System.out.println(cipherNumbers[i]);
 					break;
 				}
 			}
@@ -231,7 +222,6 @@ public class Ciphers {
 		int type = 0;
 		String natoSpace = "";
 		String letterBreak = "";
-		System.out.println("Switching");
 		switch (selectedCipher2) {
 		case "Rotational":
 			adder = Integer.parseInt(JOptionPane.showInputDialog(Window.frame, "What rotation?")) - 1;
@@ -256,8 +246,6 @@ public class Ciphers {
 			type = 2;
 			zero = '/';
 			letterBreak = "/";
-			break;
-		case "Plaintext":
 		}
 		// Goes through entire int[] array
 		for (int i = 0; i < cipherNumbers.length; i++) {
@@ -275,6 +263,8 @@ public class Ciphers {
 		return output;
 	}
 
+	// The method below takes an input and replaces it with the letter paired
+	// with it in the decrypter
 	public static String vatsyayana(String text, char[] decrypter) {
 		String enciphered = "";
 		for (int i = 0; i < text.length(); i++) {
@@ -308,6 +298,8 @@ public class Ciphers {
 		return enciphered;
 	}
 
+	// The method below takes a keyword, removes all duplicates and adds the
+	// rest of the alphabet on the end.
 	public static String keywordGen(String key) {
 		// Makes keyphrase lowercase and removes spaces
 		key = key.toLowerCase();
@@ -343,6 +335,33 @@ public class Ciphers {
 		return key;
 	}
 
+	// Converts the keyword generated using keyGen(String key) to a keyword that
+	// will reverse its effects.
+	public static String keyReversal(String key) {
+		System.out.println("abcdefghijklmnopqrstuvwxyz\n" + key);
+		int[] keyNumbers = inputToPlaintext(key);
+		for (int i = 0; i < key.length(); i++) {
+			keyNumbers[i] = (keyNumbers[i] + 25) % 26;
+		}
+		int[] reverseNumbers = new int[keyNumbers.length];
+		for (int i = 0; i < reverseNumbers.length; i++) {
+			System.out.println("Searching for letter at place i = " + i);
+			for (int j = 0; j < keyNumbers.length; j++) {
+				System.out.print("j = " + j + ", " + keyNumbers[j] + "; ");
+				if (keyNumbers[j] == i) {
+					System.out.println("found! It is now " + j);
+					reverseNumbers[i] = j + 1;
+					break;
+				}
+			}
+		}
+		key = plaintextToOutput(reverseNumbers);
+		System.out.println("\n\nabcdefghijklmnopqrstuvwxyz\n" + key);
+		return key;
+	}
+
+	// This method below takes plaintext and converts into ciphertext using a
+	// keyword.
 	public static String keywordCipher(String keyword, String text) {
 		int[] cipherNumbers = inputToPlaintext(text);
 		String enciphered = "";

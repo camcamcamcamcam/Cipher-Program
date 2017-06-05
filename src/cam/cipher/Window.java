@@ -212,6 +212,8 @@ public class Window extends JFrame implements ActionListener {
 		// Converts to plaintext.
 		switch (Ciphers.selectedCipher1) {
 		default:
+			// Default is used for plaintext, reverse, half-reverse and
+			// rotational.
 			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.punctuationSeperator(Ciphers.textContents)[0]);
 			break;
 		case "Number":
@@ -221,23 +223,29 @@ public class Window extends JFrame implements ActionListener {
 			simpleCipher = true;
 			break;
 		case "NATO Phonetic":
-			simpleCipher = true;
-			break;
+			if (Ciphers.textContents.charAt(0) != ' ') {
+				Ciphers.textContents = " " + Ciphers.textContents;
+			}
 		case "Morse Code":
 			simpleCipher = true;
 			break;
 		case "Vatsyayana":
+			Ciphers.plaintextContents = Ciphers
+					.inputToPlaintext(Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.textContents)[0],
+							JOptionPane
+									.showInputDialog(frame,
+											"Type the order of the paired letters used in enciphering this message")
+									.toCharArray()));
 			break;
 		case "Keyword":
-			break;
-		case "Vigenere":
+			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.keywordCipher(
+					Ciphers.keyReversal(Ciphers.keywordGen(JOptionPane.showInputDialog(frame,
+							"Type the keyword that was used to encipher this message."))),
+					Ciphers.punctuationSeperator(Ciphers.textContents)[0]));
 		}
 		if (simpleCipher) {
+			// Used for Morse Code, NATO Phonetic and Number.
 			Ciphers.plaintextContents = Ciphers.caster(Ciphers.textContents);
-		}
-		
-		for (int i = 0; i < Ciphers.plaintextContents.length; i++){
-			System.out.println(Ciphers.plaintextContents[i]);
 		}
 		switch (Ciphers.selectedCipher2) {
 		default:
@@ -252,22 +260,24 @@ public class Window extends JFrame implements ActionListener {
 		case "Number":
 			String ciphertext = "";
 			for (int i = 0; i < Ciphers.plaintextContents.length; i++) {
+				// Switches the 'z's and ' 's to the numbers recognised by a
+				// user.
 				if (Ciphers.plaintextContents[i] == 0) {
 					Ciphers.plaintextContents[i] = 26;
 				}
-				if (Ciphers.plaintextContents[i] == -1){
+				if (Ciphers.plaintextContents[i] == -1) {
 					Ciphers.plaintextContents[i] = 0;
 				}
 				ciphertext = ciphertext + Ciphers.plaintextContents[i] + "/";
 			}
 			while (ciphertext.substring(ciphertext.length() - 3, ciphertext.length()).equals("-1/")) {
+				// Removes all unnecessary spaces at the end of the text.
 				ciphertext = ciphertext.substring(0, ciphertext.length() - 3);
 			}
 			output.setText(ciphertext);
 			break;
 		case "NATO Phonetic":
 			output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents));
-			break;
 		case "Morse Code":
 			output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents));
 			break;
@@ -278,10 +288,10 @@ public class Window extends JFrame implements ActionListener {
 					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
 			break;
 		case "Keyword":
-			output.setText(Ciphers.formatter(Ciphers.keywordCipher(
-					Ciphers.keywordGen(
-							Ciphers.punctuationSeperator(JOptionPane.showInputDialog(frame, "Type your keyword."))[0]),
-					Ciphers.textContents), Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
+			output.setText(Ciphers.formatter(
+					Ciphers.keywordCipher(Ciphers.keywordGen(JOptionPane.showInputDialog(frame, "Type your keyword.")),
+							Ciphers.punctuationSeperator(Ciphers.textContents)[0]),
+					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
 			break;
 		case "Vigenere":
 		}
