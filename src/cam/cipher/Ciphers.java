@@ -3,6 +3,7 @@ package cam.cipher;
 import javax.swing.JOptionPane;
 
 public class Ciphers {
+	
 	// The string array below contains all the explanations of different
 	// ciphers. It is formatted like this: {Title, Explanation, Usage}.
 	public static final String[][] cipherInfo = {
@@ -32,7 +33,7 @@ public class Ciphers {
 					"This is like the Vatsyayana cipher, but the letters do not decipher into another. If H = Z, Z doesn't have to = H. Also, the use of a keyword in the code helps it to be easy to remember. Simply write out the keyword without repeating a letter, then follow the alphabet to fill in all the letters you haven't written yet. For example, 'I love brussels sprouts' would become ILOVEBRUSPTWXYZACDFGHJKMNQ, and A = I, B = L, and so on.",
 					"This was used as a more secure and easy to remember approach to ensure messages are private." },
 			{ "Vigenere cipher",
-					"This cipher uses a keyword just like the keyword cipher, but the letters stand not for which letter it is swapped with, but what magnitude of rotation is used on each letter.",
+					"This cipher uses multiple rotational ciphers. It employs the use of a passphrase that determines what each letter is cycled through.",
 					"This was used during the American Civil War. It remained unbreakable for 3 centuries after it being invented." } };
 
 	// The 2D array below displays all the known substitution ciphers.
@@ -46,8 +47,6 @@ public class Ciphers {
 					".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." },
 			{ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
 					"V", "W", "X", "Y", "Z" } };
-
-	// TODO Ciphers: Vigenere
 
 	public static final String[] namesOfCiphers = { "Plaintext", "Number", "Rotational", "Reverse", "Half-reverse",
 			"NATO Phonetic", "Morse Code", "Vatsyayana", "Keyword", "Vigenere" };
@@ -97,6 +96,7 @@ public class Ciphers {
 			}
 			break;
 		case "NATO Phonetic":
+			// Takes the first letter of every word.
 			for (int i = 0; i < text.length(); i++) {
 				if ((text.charAt(i) == ' ' || text.charAt(i) == '.') && i != text.length() - 1) {
 					output += text.charAt(i + 1);
@@ -106,6 +106,8 @@ public class Ciphers {
 			result = inputToPlaintext(output.toLowerCase());
 			break;
 		case "Morse Code":
+			// Finds characters between two slashes and compares them to the
+			// list of morse code letters.
 			for (int i = 1; i < text.length(); i++) {
 				if (text.charAt(i) == '/') {
 					for (int j = 0; j < ciphers[2].length; j++) {
@@ -338,29 +340,27 @@ public class Ciphers {
 	// Converts the keyword generated using keyGen(String key) to a keyword that
 	// will reverse its effects.
 	public static String keyReversal(String key) {
-		System.out.println("abcdefghijklmnopqrstuvwxyz\n" + key);
 		int[] keyNumbers = inputToPlaintext(key);
+		// Ensures there are no negative values
 		for (int i = 0; i < key.length(); i++) {
 			keyNumbers[i] = (keyNumbers[i] + 25) % 26;
 		}
+
+		// Searches through array and sorts it according to the alphabet.
 		int[] reverseNumbers = new int[keyNumbers.length];
 		for (int i = 0; i < reverseNumbers.length; i++) {
-			System.out.println("Searching for letter at place i = " + i);
 			for (int j = 0; j < keyNumbers.length; j++) {
-				System.out.print("j = " + j + ", " + keyNumbers[j] + "; ");
 				if (keyNumbers[j] == i) {
-					System.out.println("found! It is now " + j);
 					reverseNumbers[i] = j + 1;
 					break;
 				}
 			}
 		}
 		key = plaintextToOutput(reverseNumbers);
-		System.out.println("\n\nabcdefghijklmnopqrstuvwxyz\n" + key);
 		return key;
 	}
 
-	// This method below takes plaintext and converts into ciphertext using a
+	// The method below takes plaintext and converts into ciphertext using a
 	// keyword.
 	public static String keywordCipher(String keyword, String text) {
 		int[] cipherNumbers = inputToPlaintext(text);
@@ -373,4 +373,36 @@ public class Ciphers {
 		return enciphered;
 	}
 
+	// The method below switches between ciphertext and plaintext (determined by
+	// the boolean encode) using a passphrase.
+	public static String vigenere(String passphrase, String text, boolean encode) {
+		// Makes the passphrase nice and big.
+		for (int i = 0; i < (text.length() / passphrase.length()) + 1; i++) {
+			passphrase += passphrase + passphrase;
+			System.out.println(passphrase);
+		}
+		// Shortens it to the appropriate length.
+		passphrase = passphrase.substring(0, text.length());
+		int[] passNumbers = inputToPlaintext(passphrase);
+
+		// Prepares it for adding it
+		for (int i = 0; i < passNumbers.length; i++) {
+			passNumbers[i]++;
+		}
+
+		// Determines whether to encode or decode it
+		if (!encode) {
+			for (int i = 0; i < passNumbers.length; i++) {
+				passNumbers[i] = -passNumbers[i];
+			}
+		}
+
+		// Adds the corresponding letter of the passphrase.
+		int[] cipherNumbers = inputToPlaintext(text);
+		for (int i = 0; i < cipherNumbers.length; i++) {
+			cipherNumbers[i] = (cipherNumbers[i] + passNumbers[i] + 26) % 26;
+		}
+		text = plaintextToOutput(cipherNumbers);
+		return text;
+	}
 }

@@ -216,11 +216,13 @@ public class Window extends JFrame implements ActionListener {
 			// rotational.
 			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.punctuationSeperator(Ciphers.textContents)[0]);
 			break;
+		// TODO Work out rotational.
 		case "Number":
 			if (Ciphers.textContents.charAt(Ciphers.textContents.length() - 1) != '/') {
 				Ciphers.textContents += "/";
 			}
 			simpleCipher = true;
+			// TODO Tolerate other separating punctuation
 			break;
 		case "NATO Phonetic":
 			if (Ciphers.textContents.charAt(0) != ' ') {
@@ -228,6 +230,7 @@ public class Window extends JFrame implements ActionListener {
 			}
 		case "Morse Code":
 			simpleCipher = true;
+			// TODO Work out the double slashes
 			break;
 		case "Vatsyayana":
 			Ciphers.plaintextContents = Ciphers
@@ -242,6 +245,11 @@ public class Window extends JFrame implements ActionListener {
 					Ciphers.keyReversal(Ciphers.keywordGen(JOptionPane.showInputDialog(frame,
 							"Type the keyword that was used to encipher this message."))),
 					Ciphers.punctuationSeperator(Ciphers.textContents)[0]));
+			break;
+		case "Vigenere":
+			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.vigenere(
+					JOptionPane.showInputDialog(frame, "Type the passphrase that was used to encipher this message."),
+					Ciphers.punctuationSeperator(Ciphers.textContents)[0], false));
 		}
 		if (simpleCipher) {
 			// Used for Morse Code, NATO Phonetic and Number.
@@ -294,8 +302,10 @@ public class Window extends JFrame implements ActionListener {
 					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
 			break;
 		case "Vigenere":
+			output.setText(Ciphers.formatter(
+					Ciphers.vigenere(JOptionPane.showInputDialog(frame, "Type your passphrase"),
+							Ciphers.plaintextToOutput(Ciphers.plaintextContents), true),
+					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
 		}
-
 	}
-
 }
