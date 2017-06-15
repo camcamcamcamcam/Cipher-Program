@@ -1,6 +1,7 @@
 package cam.cipher;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -8,7 +9,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,7 +24,9 @@ public class Window extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 5081443868281354460L;
 	static JComboBox<?> ciphers_selectCipher1, ciphers_selectCipher2;
-	JTextArea input, output;
+	JTextArea input, output, inputForUser, outputFromUser;
+	JLabel instructions, timer, correct;
+	JButton startButton;
 
 	static JFrame frame;
 
@@ -194,17 +199,72 @@ public class Window extends JFrame implements ActionListener {
 		database.add(database_selectCiphers, gbc_database_selectCiphers);
 		JPanel test = new JPanel();
 		menu.addTab("Test", null, test, null);
+		GridBagLayout gbl_test = new GridBagLayout();
+		gbl_test.columnWidths = new int[] { 0, 0, 0 };
+		gbl_test.rowHeights = new int[] { 0, 0, 0, 0 };
+		gbl_test.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+		gbl_test.rowWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		test.setLayout(gbl_test);
+
+		instructions = new JLabel("Press Start to start the test.");
+		GridBagConstraints gbc_instructions = new GridBagConstraints();
+		gbc_instructions.insets = new Insets(0, 0, 5, 5);
+		gbc_instructions.gridx = 0;
+		gbc_instructions.gridy = 0;
+		test.add(instructions, gbc_instructions);
+
+		startButton = new JButton("Start");
+		startButton.addActionListener(this);
+		GridBagConstraints gbc_testButton = new GridBagConstraints();
+		gbc_testButton.fill = GridBagConstraints.BOTH;
+		gbc_testButton.insets = new Insets(0, 0, 5, 0);
+		gbc_testButton.gridx = 1;
+		gbc_testButton.gridy = 0;
+		test.add(startButton, gbc_testButton);
+
+		inputForUser = new JTextArea();
+		inputForUser.setWrapStyleWord(true);
+		inputForUser.setLineWrap(true);
+		inputForUser.setEditable(false);
+		GridBagConstraints gbc_inputForUser = new GridBagConstraints();
+		gbc_inputForUser.insets = new Insets(0, 0, 5, 5);
+		gbc_inputForUser.fill = GridBagConstraints.BOTH;
+		gbc_inputForUser.gridx = 0;
+		gbc_inputForUser.gridy = 1;
+		test.add(inputForUser, gbc_inputForUser);
+
+		outputFromUser = new JTextArea();
+		outputFromUser.setWrapStyleWord(true);
+		outputFromUser.setLineWrap(true);
+		GridBagConstraints gbc_outputFromUser = new GridBagConstraints();
+		gbc_outputFromUser.insets = new Insets(0, 0, 5, 0);
+		gbc_outputFromUser.fill = GridBagConstraints.BOTH;
+		gbc_outputFromUser.gridx = 1;
+		gbc_outputFromUser.gridy = 1;
+		test.add(outputFromUser, gbc_outputFromUser);
+
+		timer = new JLabel("");
+		GridBagConstraints gbc_timer = new GridBagConstraints();
+		gbc_timer.insets = new Insets(0, 0, 0, 5);
+		gbc_timer.gridx = 0;
+		gbc_timer.gridy = 2;
+		test.add(timer, gbc_timer);
+
+		correct = new JLabel("");
+		GridBagConstraints gbc_correct = new GridBagConstraints();
+		gbc_correct.gridx = 1;
+		gbc_correct.gridy = 2;
+		test.add(correct, gbc_correct);
 
 		JPanel export = new JPanel();
 		menu.addTab("Export", null, export, null);
 	}
 
-	public void actionPerformed(ActionEvent event) {
-
+	public String performCiphering(String local_selectCipher1, String local_selectCipher2, String local_input) {
 		// Fetches selected ciphers and text entered.
-		Ciphers.selectedCipher1 = (String) ciphers_selectCipher1.getSelectedItem();
-		Ciphers.selectedCipher2 = (String) ciphers_selectCipher2.getSelectedItem();
-		Ciphers.textContents = (String) input.getText();
+		Ciphers.selectedCipher1 = local_selectCipher1;
+		Ciphers.selectedCipher2 = local_selectCipher2;
+		Ciphers.textContents = local_input;
 		Ciphers.plaintextContents = new int[Ciphers.textContents.length()];
 
 		boolean simpleCipher = false;
@@ -216,13 +276,25 @@ public class Window extends JFrame implements ActionListener {
 			// rotational.
 			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.punctuationSeperator(Ciphers.textContents)[0]);
 			break;
-		// TODO Work out rotational.
 		case "Number":
+			System.out.println(Ciphers.textContents.charAt(0));
+			try {
+				Integer.parseInt("" + Ciphers.textContents.charAt(0));
+			} catch (NumberFormatException e) {
+				System.out.println("Exception");
+				Ciphers.textContents = Ciphers.textContents.substring(1);
+			}
+			try {
+				Integer.parseInt("" + Ciphers.textContents.charAt(Ciphers.textContents.length() - 1));
+			} catch (NumberFormatException e) {
+				System.out.println("Exception");
+				Ciphers.textContents = Ciphers.textContents.substring(0, Ciphers.textContents.length() - 1);
+			}
+			System.out.println(Ciphers.textContents);
 			if (Ciphers.textContents.charAt(Ciphers.textContents.length() - 1) != '/') {
 				Ciphers.textContents += "/";
 			}
 			simpleCipher = true;
-			// TODO Tolerate other separating punctuation
 			break;
 		case "NATO Phonetic":
 			if (Ciphers.textContents.charAt(0) != ' ') {
@@ -230,7 +302,6 @@ public class Window extends JFrame implements ActionListener {
 			}
 		case "Morse Code":
 			simpleCipher = true;
-			// TODO Work out the double slashes
 			break;
 		case "Vatsyayana":
 			Ciphers.plaintextContents = Ciphers
@@ -257,14 +328,14 @@ public class Window extends JFrame implements ActionListener {
 		}
 		switch (Ciphers.selectedCipher2) {
 		default:
-			// default is for Reverse, Half Reverse, Rotational, and Plaintext.
+			// default is for Reverse, Half Reverse, Rotational, and
+			// Plaintext.
 			if (simpleCipher) {
-				output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents).trim());
+				return Ciphers.plaintextToOutput(Ciphers.plaintextContents).trim();
 			} else {
-				output.setText(Ciphers.formatter(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
-						Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
+				return Ciphers.formatter(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
+						Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
 			}
-			break;
 		case "Number":
 			String ciphertext = "";
 			for (int i = 0; i < Ciphers.plaintextContents.length; i++) {
@@ -282,30 +353,85 @@ public class Window extends JFrame implements ActionListener {
 				// Removes all unnecessary spaces at the end of the text.
 				ciphertext = ciphertext.substring(0, ciphertext.length() - 3);
 			}
-			output.setText(ciphertext);
-			break;
+			return ciphertext;
 		case "NATO Phonetic":
-			output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents));
+			return Ciphers.plaintextToOutput(Ciphers.plaintextContents);
 		case "Morse Code":
-			output.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents));
-			break;
+			return Ciphers.plaintextToOutput(Ciphers.plaintextContents);
 		case "Vatsyayana":
-			output.setText(Ciphers.formatter(
+			return Ciphers.formatter(
 					Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.textContents)[0],
 							JOptionPane.showInputDialog(frame, "Type the order of your paired letters").toCharArray()),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
-			break;
+					Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
 		case "Keyword":
-			output.setText(Ciphers.formatter(
+			return Ciphers.formatter(
 					Ciphers.keywordCipher(Ciphers.keywordGen(JOptionPane.showInputDialog(frame, "Type your keyword.")),
 							Ciphers.punctuationSeperator(Ciphers.textContents)[0]),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
-			break;
+					Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
 		case "Vigenere":
-			output.setText(Ciphers.formatter(
+			return Ciphers.formatter(
 					Ciphers.vigenere(JOptionPane.showInputDialog(frame, "Type your passphrase"),
 							Ciphers.plaintextToOutput(Ciphers.plaintextContents), true),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[1]));
+					Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
+		}
+	}
+
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource() == ciphers_selectCipher1 || event.getSource() == ciphers_selectCipher2) {
+			output.setText(performCiphering((String) ciphers_selectCipher1.getSelectedItem(),
+					(String) ciphers_selectCipher2.getSelectedItem(), input.getText()));
+
+		} else if (event.getSource() == startButton) {
+			if (startButton.getText().equals("Start")) {
+				String[] difficulties = { "Easy", "Medium", "Hard" };
+				Ciphers.difficulty = (String) JOptionPane.showInputDialog(frame, "Set difficulty", "Set difficulty",
+						JOptionPane.PLAIN_MESSAGE, null, difficulties, "Easy");
+				// Randomises whether there is text to encipher, which sample
+				// text
+				// is to be used and which cipher is to be used (out of
+				// Rotational,
+				// Half-reverse, Reverse, Number, Morse Code and NATO Phonetic).
+				String encipher = "";
+				Random random = new Random();
+				Ciphers.encipher = random.nextBoolean();
+				Ciphers.testPlaintext = Ciphers
+						.punctuationSeperator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
+				Ciphers.testCipher = Ciphers.namesOfCiphers[random.nextInt(6) + 1];
+				Ciphers.testCiphertext = performCiphering("Plaintext", Ciphers.testCipher, Ciphers.testPlaintext);
+				if (Ciphers.encipher) {
+					// You have been instructed to encipher it. You are given
+					// the
+					// plaintext.
+					encipher = "encipher";
+					inputForUser.setText(Ciphers.testPlaintext);
+				} else {
+					// You have been instructed to decipher it. You are given
+					// the
+					// ciphertext.
+					encipher = "decipher";
+					inputForUser.setText(Ciphers.testCiphertext);
+				}
+				instructions.setText("Please " + encipher + " this text, written in " + Ciphers.testCipher + ".");
+				startButton.setText("Check");
+				System.out.println(Ciphers.testCipher + ": " + Ciphers.testPlaintext + "-->" + Ciphers.testCiphertext);
+				// TODO Keep working on this
+			} else if (startButton.getText().equals("Check")) {
+				if ((Ciphers.punctuationSeperator(outputFromUser.getText())[0].equals(Ciphers.testPlaintext)
+						&& !Ciphers.encipher)
+						|| (Ciphers.punctuationSeperator(outputFromUser.getText())[0].equals(Ciphers.testCiphertext)
+								&& Ciphers.encipher)) {
+					correct.setText("Correct!");
+					outputFromUser.setBackground(Color.GREEN);
+
+				} else {
+					correct.setText("Incorrect");
+					if (Ciphers.encipher) {
+						outputFromUser.setText(outputFromUser.getText() + "\n\n\n" + Ciphers.testCiphertext);
+					} else {
+						outputFromUser.setText(outputFromUser.getText() + "\n\n\n" + Ciphers.testPlaintext);
+					}
+				}
+			}
 		}
 	}
 }
