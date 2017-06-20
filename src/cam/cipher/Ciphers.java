@@ -1,10 +1,13 @@
 package cam.cipher;
 
 import javax.swing.JOptionPane;
+import java.util.Random;
 
 public class Ciphers {
 
 	// TODO Do MASSIVE bug testing.
+
+	// TODO Put comments everywhere in Window class
 
 	// TODO Allow ciphering between non-letters and vatsyayana
 
@@ -50,10 +53,17 @@ public class Ciphers {
 			{ ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---",
 					".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." },
 			{ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
-					"V", "W", "X", "Y", "Z" } };
+					"V", "W", "X", "Y", "Z" },
+			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
+			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
+			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
+			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
+			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
+			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+					"" } };
 
 	public static final String[] namesOfCiphers = { "Plaintext", "Number", "Rotational", "Reverse", "Half-reverse",
-			"NATO Phonetic", "Morse Code", "Vatsyayana", "Keyword", "Vigenere" };
+			"NATO Phonetic", "Morse Code", "Vatsyayana", "Keyword", "Vigenere", "", "", "", "", "", "" };
 
 	public static final String[] exampleText = { "Humans have a long period of development after birth",
 			"Their life depends less on instinct than other animals, and more on learning",
@@ -81,45 +91,45 @@ public class Ciphers {
 			"Humans belong to the order of primates", "Apes like gorillas and orangutans are also primates",
 			"The closest living relatives of humans are the two chimpanzee species: the common chimpanzee and the bonobo",
 			"Scientists have examined the genes of humans and chimpanzees, and compared their DNA",
-			"The studies showed that nine five  per cent  to nine nine  per cent  of the DNA of humans and chimpanzees is the same",
+			"The studies showed that nine five per cent to nine nine per cent of the DNA of humans and chimpanzees is the same",
 			"Biologists explain the similarity between humans and other apes by their descent from a common ancestor",
-			"In two zero zero one , a hominid skull was discovered in Chad",
-			"The skull is about seven  million years old, and has been classified as Sahelanthropus tchadensis",
-			"This skull may show that the date at which humans started to evolve (develop differently) from other primates is two  million years earlier than scientists had previously thought",
+			"In two zero zero one, a hominid skull was discovered in Chad",
+			"The skull is about seven million years old, and has been classified as Sahelanthropus tchadensis",
+			"This skull may show that the date at which humans started to evolve (develop differently) from other primates is two million years earlier than scientists had previously thought",
 			"Humans are part of a subfamily called the Homininae (or hominins), inside the hominids or great apes",
 			"Long ago, there used to be other types of hominins on Earth",
 			"They were like modern humans, but not the same",
 			"Homo sapiens are the only type of hominins who are alive today",
 			"The earliest known fossils of genus Homo have been called Homo habilis (handy man)",
 			"The first fossils of Homo habilis were found in Tanzania",
-			"Homo hablilis is thought to have lived about two .two  to one .seven  million years ago",
+			"Homo hablilis is thought to have lived about two .two to one .seven million years ago",
 			"Another human species thought to be an ancestor of the modern human is Homo erectus",
 			"There are other extinct species of Homo known today",
 			"Many of them were likely our 'cousins', as they developed differently than our ancestors",
 			"A theory called the Sahara pump theory has been used to tell how different species of plants and animals moved from Africa to the Middle East, and then elsewhere",
 			"Early humans may have moved from Africa to other parts of the world in the same way",
-			"The first truly modern humans seem to have appeared between two zero zero ,zero zero zero  and one three zero ,zero zero zero  years ago",
+			"The first truly modern humans seem to have appeared between two zero zero, zero zero zero and one three zero, zero zero zero years ago",
 			"These early humans later moved out from Africa",
-			"By about nine zero ,zero zero zero  years ago they had moved into Eurasia and the Middle East",
-			"This was the area where Neanderthals, Homo neanderthalensis, had been living for a long time (at least three five zero ,zero zero zero  years)",
-			"By about four two  to four four ,zero zero zero  years ago Homo sapiens had reached western Europe, including Britain",
-			"In Europe and western Asia, Homo sapiens replaced the neanderthals by about three five ,zero zero zero  years ago",
+			"By about nine zero, zero zero zero years ago they had moved into Eurasia and the Middle East",
+			"This was the area where Neanderthals, Homo neanderthalensis, had been living for a long time (at least three five zero, zero zero zero years)",
+			"By about four two to four four, zero zero zero years ago Homo sapiens had reached western Europe, including Britain",
+			"In Europe and western Asia, Homo sapiens replaced the neanderthals by about three five, zero zero zero years ago",
 			"The details of this event are not known", "At roughly the same time Homo sapiens arrived in Australia",
-			"Their arrival in the Americas was much later, about one five ,zero zero zero  years ago",
+			"Their arrival in the Americas was much later, about one five, zero zero zero years ago",
 			"All these earlier groups of modern man were hunter-gatherers",
 			"Early human history is commonly divided into three ages",
 			"The time periods are labeled with the material used for tools",
 			"The Stone Age The Bronze Age The Iron Age",
 			"The Stone Age is commonly subdivided into the Paleolithic, Mesolithic, and Neolithic periods",
-			"Up to about one zero  thousand years ago most humans were hunter-gatherers",
+			"Up to about one zero thousand years ago most humans were hunter-gatherers",
 			"They did not live in one place, but moved around as the seasons changed",
 			"The start of planting crops for food, called farming made the Neolithic revolution",
 			"Some people chose to live in settlements",
 			"This also led to the invention of metal tools and the training of animals",
-			"About six zero zero zero  years ago the first proper civilizations began in places like Egypt, India, and Syria",
+			"About six zero zero zero years ago the first proper civilizations began in places like Egypt, India, and Syria",
 			"The people formed governments and armies for protection",
 			"They competed for area to live and resources and sometimes they fought with each other",
-			"About four zero zero zero  years ago some states took over or conquered other states and made empires",
+			"About four zero zero zero years ago some states took over or conquered other states and made empires",
 			"Examples include ancient Greece and the Roman Empire",
 			"Some modern day religions also began at this time such as Judaism and Hinduism",
 			"From the Middle Ages and beyond humanity saw an explosion of new technology and inventions",
@@ -129,20 +139,20 @@ public class Ciphers {
 			"In early times, humans usually settled near to water and other natural resources",
 			"In modern times if people need things they can transport them from somewhere else",
 			"So basing a settlement close to resources is no longer as important as it once was",
-			"Since one eight zero zero , the number of humans, or population, has increased by six billion",
-			"Most humans (six one  per cent ) live in Asia",
-			"The rest live in the Americas (one four  per cent ), Africa (one four  per cent ), Europe (one one  per cent ), and Oceania (zero .five  per cent )",
+			"Since one eight zero zero, the number of humans, or population, has increased by six billion",
+			"Most humans (six one per cent ) live in Asia",
+			"The rest live in the Americas (one four per cent ), Africa (one four per cent ), Europe (one one per cent ), and Oceania (zero .five per cent )",
 			"Most people live in towns and cities", "This number is expected to get higher",
-			"In two zero zero five  the United Nations said that by the end of that year, over half the world would be living in cities",
-			"This is an important change in human settlement patterns: a century earlier in one nine zero zero  only one four  per cent  of people lived in cities, in two zero zero zero  four seven  per cent  of the world's population lived in cities",
-			"In developed countries, like the United States, eight zero  per cent  of the population live in cities",
+			"In two zero zero five the United Nations said that by the end of that year, over half the world would be living in cities",
+			"This is an important change in human settlement patterns: a century earlier in one nine zero zero only one four per cent of people lived in cities, in two zero zero zero four seven per cent of the world's population lived in cities",
+			"In developed countries, like the United States, eight zero per cent of the population live in cities",
 			"Humans have a large effect on the world",
 			"Humans are at the top of the food chain and are generally not eaten by any animals",
 			"Humans have been described as super predators because of this",
 			"Because of industry and other reasons humans are said to be a big cause of global climate change",
 			"Human body types can be very different from each other",
-			"The average height of an adult human is between five  and six  feet",
-			"The average weight is between seven six  and eight three  kg for males and five four –six four  kg for females",
+			"The average height of an adult human is between five and six feet",
+			"The average weight is between seven six and eight three kg for males and five four –six four kg for females",
 			"Human longer hair grows on the underarms, the genitals, and the top of the head in adults of both genders, and on the legs and face of all adult males, and on the chest and back of many adult males",
 			"In human children of both genders, long hair grows only on the top of the head",
 			"Although it might look like humans have fewer hairs than most primates, they actually do not",
@@ -159,9 +169,9 @@ public class Ciphers {
 			"In colder climates the advantage of light-colored skin is that it radiates less heat",
 			"Humans are not as strong as other primates of the same size",
 			"An average female orangutan is at least three times as strong as an average human man",
-			"The average human male needs seven  to eight  hours sleep a day",
+			"The average human male needs seven to eight hours sleep a day",
 			"People who sleep less than this are generally not as healthy",
-			"A child needs more sleep, nine  to one zero  hours on average",
+			"A child needs more sleep, nine to one zero hours on average",
 			"The human life cycle is quite like most other mammals",
 			"The young grow inside the female mother for nine months",
 			"After this time the baby is pushed out of the woman's vagina",
@@ -172,14 +182,14 @@ public class Ciphers {
 			"The number of mothers dying in childbirth is less in the two one st century",
 			"This is because of better medication and treatment",
 			"In many poor countries the number of mothers dying is higher",
-			"Sometimes it is up to one zero  times as many as richer countries",
-			"The average human baby weighs three  – four  kg at birth and is five zero –six zero  cm tall",
+			"Sometimes it is up to one zero times as many as richer countries",
+			"The average human baby weighs three – four kg at birth and is five zero –six zero cm tall",
 			"This is often less in poorer countries", "Many babies in poor countries often die early because of this",
 			"Humans have four stages in their lives: childhood, adolescence, adulthood and old age",
 			"Life expectancy is how long you are expected to live for",
 			"This depends on many things including where you live",
-			"The highest life expectancy is for people from Monaco, eight nine .five two  years",
-			"The lowest is for people from Chad where life expectancy is only four nine .eight one  years",
+			"The highest life expectancy is for people from Monaco, eight nine .five two years",
+			"The lowest is for people from Chad where life expectancy is only four nine .eight one years",
 			"Psychology is the study of how the human mind works",
 			"The human brain is the main controller of what a person does",
 			"Everything from moving and breathing to thinking is done by the brain",
@@ -193,7 +203,7 @@ public class Ciphers {
 			"Humans have the most complicated languages on Earth",
 			"Although almost all animals communicate, human language is unique",
 			"Its use of syntax, and its huge learnt vocabulary are its main features",
-			"There are over seven ,three zero zero  languages spoken around the world",
+			"There are over seven, three zero zero languages spoken around the world",
 			"The world's most spoken first language is Mandarin Chinese, and the most spoken language is English",
 			"This includes speakers of English as a second language", "Art has existed almost as long as humans",
 			"People have been doing some types of art for thousands of years as the picture on the right shows",
@@ -231,31 +241,39 @@ public class Ciphers {
 			"Technology is of great importance to science, to medicine, and to everyday life",
 			"A war is a lethal fight between large groups of people, usually countries or states",
 			"A war involves the use of lethal weapons as both sides try to kill the other",
-			"It is estimated that during the two zero th century, between one six seven  and one eight eight  million humans died because of war",
+			"It is estimated that during the two zero th century, between one six seven and one eight eight million humans died because of war",
 			"The people who fight for a state in wars are called soldiers",
 			"The people who fight in wars, but not for a state, are usually called 'fighters'",
 			"Modern wars are very different from wars a thousand or even a hundred years ago",
 			"Modern war involves sabotage, terrorism, propaganda, and guerrilla warfare",
 			"In modern-day wars, civilians (people who are not soldiers) are often targets",
 			"An example of this is the nuclear bomb dropped on Hiroshima and Nagasaki at the end of World War II",
-			"The bombs killed as many as one four zero ,zero zero zero  people in Hiroshima and eight zero ,zero zero zero  in Nagasaki by the end of one nine four five , about half on the days of the bombings",
+			"The bombs killed as many as one four zero, zero zero zero people in Hiroshima and eight zero, zero zero zero in Nagasaki by the end of one nine four five, about half on the days of the bombings",
 			"Since then, thousands more have died from wounds or illness because of exposure to radiation released by the bombs",
 			"In both cities, the overwhelming majority of the dead were civilians",
 			"In Germany, Austria, and Great Britain, conventional bombs were used",
-			"About six zero ,five nine five  British, and five five zero ,zero zero zero  German, civilians were killed by planes bombing cities." };
+			"About six zero, five nine five British, and five five zero, zero zero zero German, civilians were killed by planes bombing cities." };
 
+	// ciphering variables
 	public static String selectedCipher1 = "";
 	public static String selectedCipher2 = "";
-
 	public static String textContents = "";
 	public static int[] plaintextContents;
 
 	// testing variables
 	public static String difficulty;
+	public static int numberOfTasks;
+	public static int tasksCompleted;
+	public static int tasksCorrect;
+	public static int adder;
+	public static boolean testRunning;
 	public static boolean encipher;
 	public static String testCipher;
 	public static String testPlaintext;
 	public static String testCiphertext;
+
+	// create variables
+	public static int emptyCipher;
 
 	// This code converts a string of numbers, NATO keywords or Morse code and
 	// seperator to an int array.
@@ -391,7 +409,13 @@ public class Ciphers {
 		switch (selectedCipher1) {
 		case "Rotational":
 			try {
-				adder = Integer.parseInt(JOptionPane.showInputDialog(Window.frame, "What rotation?")) - 1;
+				if (testRunning) {
+					Random random = new Random();
+					adder = random.nextInt(25) + 1;
+					Ciphers.adder = adder;
+				} else {
+					adder = Integer.parseInt(JOptionPane.showInputDialog(Window.frame, "What rotation?")) - 1;
+				}
 			} catch (NumberFormatException e) {
 				adder = -1;
 			}
@@ -436,7 +460,13 @@ public class Ciphers {
 		switch (selectedCipher2) {
 		case "Rotational":
 			try {
-				adder = Integer.parseInt(JOptionPane.showInputDialog(Window.frame, "What rotation?")) - 1;
+				if (testRunning) {
+					Random random = new Random();
+					adder = random.nextInt(25) + 1;
+					Ciphers.adder = adder;
+				} else {
+					adder = Integer.parseInt(JOptionPane.showInputDialog(Window.frame, "What rotation?")) - 1;
+				}
 			} catch (NumberFormatException e) {
 				adder = -1;
 			}
