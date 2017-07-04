@@ -11,18 +11,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.SpinnerNumberModel;
-import java.awt.GridLayout;
 import javax.swing.JTextField;
 
 public class Window extends JFrame implements ActionListener {
@@ -34,32 +30,10 @@ public class Window extends JFrame implements ActionListener {
 	JButton startButton, finish;
 
 	static JFrame frame;
-	private JTextField textFieldA;
-	private JTextField textFieldB;
-	private JTextField textFieldC;
-	private JTextField textFieldD;
-	private JTextField textFieldE;
-	private JTextField textFieldF;
-	private JTextField textFieldG;
-	private JTextField textFieldH;
-	private JTextField textFieldI;
-	private JTextField textFieldJ;
-	private JTextField textFieldK;
-	private JTextField textFieldL;
-	private JTextField textFieldM;
-	private JTextField textFieldN;
-	private JTextField textFieldO;
-	private JTextField textFieldP;
-	private JTextField textFieldQ;
-	private JTextField textFieldR;
-	private JTextField textFieldS;
-	private JTextField textFieldT;
-	private JTextField textFieldU;
-	private JTextField textFieldV;
-	private JTextField textFieldW;
-	private JTextField textFieldX;
-	private JTextField textFieldY;
-	private JTextField textFieldZ;
+	private JTextField[] textField = new JTextField[28];
+	private GridBagConstraints[] gbc_textField = new GridBagConstraints[28];
+	private JLabel[] lbl = new JLabel[28];
+	private GridBagConstraints[] gbc_lbl = new GridBagConstraints[28];
 
 	private JTextField plainFormat;
 
@@ -68,6 +42,7 @@ public class Window extends JFrame implements ActionListener {
 			public void run() {
 				try {
 					Window window = new Window();
+					window.frame.setTitle("Cipher Program");
 					window.frame.setVisible(true);
 					window.frame.setExtendedState(window.frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
 				} catch (Exception e) {
@@ -82,8 +57,6 @@ public class Window extends JFrame implements ActionListener {
 	}
 
 	private void initialize() {
-
-		Ciphers.emptyCipher = 10;
 
 		frame = new JFrame();
 		frame.setBounds(100, 100, 640, 480);
@@ -102,6 +75,7 @@ public class Window extends JFrame implements ActionListener {
 		ciphers.setLayout(gbl_ciphers);
 
 		ciphers_selectCipher1 = new JComboBox(Ciphers.namesOfCiphers);
+		ciphers_selectCipher1.setEditable(true);
 		ciphers_selectCipher1.addActionListener(this);
 		GridBagConstraints gbc_ciphers_selectCipher = new GridBagConstraints();
 		gbc_ciphers_selectCipher.insets = new Insets(0, 0, 5, 5);
@@ -111,6 +85,7 @@ public class Window extends JFrame implements ActionListener {
 		ciphers.add(ciphers_selectCipher1, gbc_ciphers_selectCipher);
 
 		ciphers_selectCipher2 = new JComboBox(Ciphers.namesOfCiphers);
+		ciphers_selectCipher2.setEditable(true);
 		ciphers_selectCipher2.addActionListener(this);
 		GridBagConstraints gbc_ciphers_selectcipher2 = new GridBagConstraints();
 		gbc_ciphers_selectcipher2.insets = new Insets(0, 0, 5, 0);
@@ -281,17 +256,17 @@ public class Window extends JFrame implements ActionListener {
 		JPanel export = new JPanel();
 		menu.addTab("Create", null, export, null);
 		GridBagLayout gbl_export = new GridBagLayout();
-		gbl_export.columnWidths = new int[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0 };
+		gbl_export.columnWidths = new int[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 0 };
 		gbl_export.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-		gbl_export.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+		gbl_export.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
 				Double.MIN_VALUE };
 		gbl_export.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		export.setLayout(gbl_export);
 
 		plainFormat = new JTextField();
-		plainFormat.setText("a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z;");
+		plainFormat.setText("a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z;; ;");
 		GridBagConstraints gbc_plainFormat = new GridBagConstraints();
-		gbc_plainFormat.gridwidth = 13;
+		gbc_plainFormat.gridwidth = 14;
 		gbc_plainFormat.insets = new Insets(0, 0, 5, 5);
 		gbc_plainFormat.fill = GridBagConstraints.HORIZONTAL;
 		gbc_plainFormat.gridx = 0;
@@ -308,428 +283,522 @@ public class Window extends JFrame implements ActionListener {
 		export.add(finish, gbc_finish);
 
 		JLabel createInstructions = new JLabel(
-				"Type a character or word for each letter, or seperate each word with a semicolon");
+				"Type a unique character or word for each letter, or separate each word with a semicolon");
 		GridBagConstraints gbc_createInstructions = new GridBagConstraints();
-		gbc_createInstructions.gridwidth = 12;
-		gbc_createInstructions.insets = new Insets(0, 0, 5, 0);
+		gbc_createInstructions.gridwidth = 13;
+		gbc_createInstructions.insets = new Insets(0, 0, 5, 5);
 		gbc_createInstructions.gridx = 1;
 		gbc_createInstructions.gridy = 1;
 		export.add(createInstructions, gbc_createInstructions);
 
-		textFieldA = new JTextField();
-		GridBagConstraints gbc_textFieldA = new GridBagConstraints();
-		gbc_textFieldA.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldA.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldA.gridx = 0;
-		gbc_textFieldA.gridy = 2;
-		export.add(textFieldA, gbc_textFieldA);
-		textFieldA.setColumns(10);
+		textField[1] = new JTextField();
+		gbc_textField[1] = new GridBagConstraints();
+		gbc_textField[1].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[1].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[1].gridx = 0;
+		gbc_textField[1].gridy = 2;
+		export.add(textField[1], gbc_textField[1]);
+		textField[1].setColumns(10);
 
-		textFieldB = new JTextField();
-		GridBagConstraints gbc_textFieldB = new GridBagConstraints();
-		gbc_textFieldB.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldB.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldB.gridx = 1;
-		gbc_textFieldB.gridy = 2;
-		export.add(textFieldB, gbc_textFieldB);
-		textFieldB.setColumns(10);
+		textField[2] = new JTextField();
+		gbc_textField[2] = new GridBagConstraints();
+		gbc_textField[2].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[2].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[2].gridx = 1;
+		gbc_textField[2].gridy = 2;
+		export.add(textField[2], gbc_textField[2]);
+		textField[2].setColumns(10);
 
-		textFieldC = new JTextField();
-		GridBagConstraints gbc_textFieldC = new GridBagConstraints();
-		gbc_textFieldC.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldC.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldC.gridx = 2;
-		gbc_textFieldC.gridy = 2;
-		export.add(textFieldC, gbc_textFieldC);
-		textFieldC.setColumns(10);
+		textField[3] = new JTextField();
+		gbc_textField[3] = new GridBagConstraints();
+		gbc_textField[3].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[3].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[3].gridx = 2;
+		gbc_textField[3].gridy = 2;
+		export.add(textField[3], gbc_textField[3]);
+		textField[3].setColumns(10);
 
-		textFieldD = new JTextField();
-		GridBagConstraints gbc_textFieldD = new GridBagConstraints();
-		gbc_textFieldD.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldD.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldD.gridx = 3;
-		gbc_textFieldD.gridy = 2;
-		export.add(textFieldD, gbc_textFieldD);
-		textFieldD.setColumns(10);
+		textField[4] = new JTextField();
+		gbc_textField[4] = new GridBagConstraints();
+		gbc_textField[4].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[4].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[4].gridx = 3;
+		gbc_textField[4].gridy = 2;
+		export.add(textField[4], gbc_textField[4]);
+		textField[4].setColumns(10);
 
-		textFieldE = new JTextField();
-		GridBagConstraints gbc_textFieldE = new GridBagConstraints();
-		gbc_textFieldE.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldE.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldE.gridx = 4;
-		gbc_textFieldE.gridy = 2;
-		export.add(textFieldE, gbc_textFieldE);
-		textFieldE.setColumns(10);
+		textField[5] = new JTextField();
+		gbc_textField[5] = new GridBagConstraints();
+		gbc_textField[5].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[5].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[5].gridx = 4;
+		gbc_textField[5].gridy = 2;
+		export.add(textField[5], gbc_textField[5]);
+		textField[5].setColumns(10);
 
-		textFieldF = new JTextField();
-		GridBagConstraints gbc_textFieldF = new GridBagConstraints();
-		gbc_textFieldF.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldF.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldF.gridx = 5;
-		gbc_textFieldF.gridy = 2;
-		export.add(textFieldF, gbc_textFieldF);
-		textFieldF.setColumns(10);
+		textField[6] = new JTextField();
+		gbc_textField[6] = new GridBagConstraints();
+		gbc_textField[6].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[6].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[6].gridx = 5;
+		gbc_textField[6].gridy = 2;
+		export.add(textField[6], gbc_textField[6]);
+		textField[6].setColumns(10);
 
-		textFieldG = new JTextField();
-		GridBagConstraints gbc_textFieldG = new GridBagConstraints();
-		gbc_textFieldG.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldG.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldG.gridx = 6;
-		gbc_textFieldG.gridy = 2;
-		export.add(textFieldG, gbc_textFieldG);
-		textFieldG.setColumns(10);
+		textField[7] = new JTextField();
+		gbc_textField[7] = new GridBagConstraints();
+		gbc_textField[7].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[7].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[7].gridx = 6;
+		gbc_textField[7].gridy = 2;
+		export.add(textField[7], gbc_textField[7]);
+		textField[7].setColumns(10);
 
-		textFieldH = new JTextField();
-		GridBagConstraints gbc_textFieldH = new GridBagConstraints();
-		gbc_textFieldH.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldH.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldH.gridx = 7;
-		gbc_textFieldH.gridy = 2;
-		export.add(textFieldH, gbc_textFieldH);
-		textFieldH.setColumns(10);
+		textField[8] = new JTextField();
+		gbc_textField[8] = new GridBagConstraints();
+		gbc_textField[8].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[8].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[8].gridx = 7;
+		gbc_textField[8].gridy = 2;
+		export.add(textField[8], gbc_textField[8]);
+		textField[8].setColumns(10);
 
-		textFieldI = new JTextField();
-		GridBagConstraints gbc_textFieldI = new GridBagConstraints();
-		gbc_textFieldI.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldI.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldI.gridx = 8;
-		gbc_textFieldI.gridy = 2;
-		export.add(textFieldI, gbc_textFieldI);
-		textFieldI.setColumns(10);
+		textField[9] = new JTextField();
+		gbc_textField[9] = new GridBagConstraints();
+		gbc_textField[9].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[9].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[9].gridx = 8;
+		gbc_textField[9].gridy = 2;
+		export.add(textField[9], gbc_textField[9]);
+		textField[9].setColumns(10);
 
-		textFieldJ = new JTextField();
-		GridBagConstraints gbc_textFieldJ = new GridBagConstraints();
-		gbc_textFieldJ.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldJ.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldJ.gridx = 9;
-		gbc_textFieldJ.gridy = 2;
-		export.add(textFieldJ, gbc_textFieldJ);
-		textFieldJ.setColumns(10);
+		textField[10] = new JTextField();
+		gbc_textField[10] = new GridBagConstraints();
+		gbc_textField[10].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[10].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[10].gridx = 9;
+		gbc_textField[10].gridy = 2;
+		export.add(textField[10], gbc_textField[10]);
+		textField[10].setColumns(10);
 
-		textFieldK = new JTextField();
-		GridBagConstraints gbc_textFieldK = new GridBagConstraints();
-		gbc_textFieldK.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldK.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldK.gridx = 10;
-		gbc_textFieldK.gridy = 2;
-		export.add(textFieldK, gbc_textFieldK);
-		textFieldK.setColumns(10);
+		textField[11] = new JTextField();
+		gbc_textField[11] = new GridBagConstraints();
+		gbc_textField[11].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[11].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[11].gridx = 10;
+		gbc_textField[11].gridy = 2;
+		export.add(textField[11], gbc_textField[11]);
+		textField[11].setColumns(10);
 
-		textFieldL = new JTextField();
-		GridBagConstraints gbc_textFieldL = new GridBagConstraints();
-		gbc_textFieldL.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldL.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldL.gridx = 11;
-		gbc_textFieldL.gridy = 2;
-		export.add(textFieldL, gbc_textFieldL);
-		textFieldL.setColumns(10);
+		textField[12] = new JTextField();
+		gbc_textField[12] = new GridBagConstraints();
+		gbc_textField[12].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[12].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[12].gridx = 11;
+		gbc_textField[12].gridy = 2;
+		export.add(textField[12], gbc_textField[12]);
+		textField[12].setColumns(10);
 
-		textFieldM = new JTextField();
-		GridBagConstraints gbc_textFieldM = new GridBagConstraints();
-		gbc_textFieldM.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldM.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldM.gridx = 12;
-		gbc_textFieldM.gridy = 2;
-		export.add(textFieldM, gbc_textFieldM);
-		textFieldM.setColumns(10);
+		textField[13] = new JTextField();
+		gbc_textField[13] = new GridBagConstraints();
+		gbc_textField[13].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[13].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[13].gridx = 12;
+		gbc_textField[13].gridy = 2;
+		export.add(textField[13], gbc_textField[13]);
+		textField[13].setColumns(10);
 
-		JLabel lblA = new JLabel("A");
-		GridBagConstraints gbc_lblA = new GridBagConstraints();
-		gbc_lblA.insets = new Insets(0, 0, 5, 5);
-		gbc_lblA.gridx = 0;
-		gbc_lblA.gridy = 3;
-		export.add(lblA, gbc_lblA);
+		textField[0] = new JTextField();
+		gbc_textField[0] = new GridBagConstraints();
+		gbc_textField[0].insets = new Insets(0, 0, 5, 0);
+		gbc_textField[0].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[0].gridx = 13;
+		gbc_textField[0].gridy = 2;
+		export.add(textField[0], gbc_textField[0]);
+		textField[0].setColumns(10);
 
-		JLabel lblB = new JLabel("B");
-		GridBagConstraints gbc_lblB = new GridBagConstraints();
-		gbc_lblB.insets = new Insets(0, 0, 5, 5);
-		gbc_lblB.gridx = 1;
-		gbc_lblB.gridy = 3;
-		export.add(lblB, gbc_lblB);
+		lbl[1] = new JLabel("A");
+		gbc_lbl[1] = new GridBagConstraints();
+		gbc_lbl[1].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[1].gridx = 0;
+		gbc_lbl[1].gridy = 3;
+		export.add(lbl[1], gbc_lbl[1]);
 
-		JLabel lblC = new JLabel("C");
-		GridBagConstraints gbc_lblC = new GridBagConstraints();
-		gbc_lblC.insets = new Insets(0, 0, 5, 5);
-		gbc_lblC.gridx = 2;
-		gbc_lblC.gridy = 3;
-		export.add(lblC, gbc_lblC);
+		lbl[2] = new JLabel("B");
+		gbc_lbl[2] = new GridBagConstraints();
+		gbc_lbl[2].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[2].gridx = 1;
+		gbc_lbl[2].gridy = 3;
+		export.add(lbl[2], gbc_lbl[2]);
 
-		JLabel lblD = new JLabel("D");
-		GridBagConstraints gbc_lblD = new GridBagConstraints();
-		gbc_lblD.insets = new Insets(0, 0, 5, 5);
-		gbc_lblD.gridx = 3;
-		gbc_lblD.gridy = 3;
-		export.add(lblD, gbc_lblD);
+		lbl[3] = new JLabel("C");
+		gbc_lbl[3] = new GridBagConstraints();
+		gbc_lbl[3].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[3].gridx = 2;
+		gbc_lbl[3].gridy = 3;
+		export.add(lbl[3], gbc_lbl[3]);
 
-		JLabel lblE = new JLabel("E");
-		GridBagConstraints gbc_lblE = new GridBagConstraints();
-		gbc_lblE.insets = new Insets(0, 0, 5, 5);
-		gbc_lblE.gridx = 4;
-		gbc_lblE.gridy = 3;
-		export.add(lblE, gbc_lblE);
+		lbl[4] = new JLabel("D");
+		gbc_lbl[4] = new GridBagConstraints();
+		gbc_lbl[4].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[4].gridx = 3;
+		gbc_lbl[4].gridy = 3;
+		export.add(lbl[4], gbc_lbl[4]);
 
-		JLabel lblF = new JLabel("F");
-		GridBagConstraints gbc_lblF = new GridBagConstraints();
-		gbc_lblF.insets = new Insets(0, 0, 5, 5);
-		gbc_lblF.gridx = 5;
-		gbc_lblF.gridy = 3;
-		export.add(lblF, gbc_lblF);
+		lbl[5] = new JLabel("E");
+		gbc_lbl[5] = new GridBagConstraints();
+		gbc_lbl[5].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[5].gridx = 4;
+		gbc_lbl[5].gridy = 3;
+		export.add(lbl[5], gbc_lbl[5]);
 
-		JLabel lblG = new JLabel("G");
-		GridBagConstraints gbc_lblG = new GridBagConstraints();
-		gbc_lblG.insets = new Insets(0, 0, 5, 5);
-		gbc_lblG.gridx = 6;
-		gbc_lblG.gridy = 3;
-		export.add(lblG, gbc_lblG);
+		lbl[6] = new JLabel("F");
+		gbc_lbl[6] = new GridBagConstraints();
+		gbc_lbl[6].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[6].gridx = 5;
+		gbc_lbl[6].gridy = 3;
+		export.add(lbl[6], gbc_lbl[6]);
 
-		JLabel lblH = new JLabel("H");
-		GridBagConstraints gbc_lblH = new GridBagConstraints();
-		gbc_lblH.insets = new Insets(0, 0, 5, 5);
-		gbc_lblH.gridx = 7;
-		gbc_lblH.gridy = 3;
-		export.add(lblH, gbc_lblH);
+		lbl[7] = new JLabel("G");
+		gbc_lbl[7] = new GridBagConstraints();
+		gbc_lbl[7].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[7].gridx = 6;
+		gbc_lbl[7].gridy = 3;
+		export.add(lbl[7], gbc_lbl[7]);
 
-		JLabel lblI = new JLabel("I");
-		GridBagConstraints gbc_lblI = new GridBagConstraints();
-		gbc_lblI.insets = new Insets(0, 0, 5, 5);
-		gbc_lblI.gridx = 8;
-		gbc_lblI.gridy = 3;
-		export.add(lblI, gbc_lblI);
+		lbl[8] = new JLabel("H");
+		gbc_lbl[8] = new GridBagConstraints();
+		gbc_lbl[8].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[8].gridx = 7;
+		gbc_lbl[8].gridy = 3;
+		export.add(lbl[8], gbc_lbl[8]);
 
-		JLabel lblJ = new JLabel("J");
-		GridBagConstraints gbc_lblJ = new GridBagConstraints();
-		gbc_lblJ.insets = new Insets(0, 0, 5, 5);
-		gbc_lblJ.gridx = 9;
-		gbc_lblJ.gridy = 3;
-		export.add(lblJ, gbc_lblJ);
+		lbl[9] = new JLabel("I");
+		gbc_lbl[9] = new GridBagConstraints();
+		gbc_lbl[9].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[9].gridx = 8;
+		gbc_lbl[9].gridy = 3;
+		export.add(lbl[9], gbc_lbl[9]);
 
-		JLabel lblK = new JLabel("K");
-		GridBagConstraints gbc_lblK = new GridBagConstraints();
-		gbc_lblK.insets = new Insets(0, 0, 5, 5);
-		gbc_lblK.gridx = 10;
-		gbc_lblK.gridy = 3;
-		export.add(lblK, gbc_lblK);
+		lbl[10] = new JLabel("J");
+		gbc_lbl[10] = new GridBagConstraints();
+		gbc_lbl[10].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[10].gridx = 9;
+		gbc_lbl[10].gridy = 3;
+		export.add(lbl[10], gbc_lbl[10]);
 
-		JLabel lblL = new JLabel("L");
-		GridBagConstraints gbc_lblL = new GridBagConstraints();
-		gbc_lblL.insets = new Insets(0, 0, 5, 5);
-		gbc_lblL.gridx = 11;
-		gbc_lblL.gridy = 3;
-		export.add(lblL, gbc_lblL);
+		lbl[11] = new JLabel("K");
+		gbc_lbl[11] = new GridBagConstraints();
+		gbc_lbl[11].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[11].gridx = 10;
+		gbc_lbl[11].gridy = 3;
+		export.add(lbl[11], gbc_lbl[11]);
 
-		JLabel lblM = new JLabel("M");
-		GridBagConstraints gbc_lblM = new GridBagConstraints();
-		gbc_lblM.insets = new Insets(0, 0, 5, 0);
-		gbc_lblM.gridx = 12;
-		gbc_lblM.gridy = 3;
-		export.add(lblM, gbc_lblM);
+		lbl[12] = new JLabel("L");
+		gbc_lbl[12] = new GridBagConstraints();
+		gbc_lbl[12].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[12].gridx = 11;
+		gbc_lbl[12].gridy = 3;
+		export.add(lbl[12], gbc_lbl[12]);
 
-		textFieldN = new JTextField();
-		GridBagConstraints gbc_textFieldN = new GridBagConstraints();
-		gbc_textFieldN.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldN.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldN.gridx = 0;
-		gbc_textFieldN.gridy = 4;
-		export.add(textFieldN, gbc_textFieldN);
-		textFieldN.setColumns(10);
+		lbl[13] = new JLabel("M");
+		gbc_lbl[13] = new GridBagConstraints();
+		gbc_lbl[13].insets = new Insets(0, 0, 5, 5);
+		gbc_lbl[13].gridx = 12;
+		gbc_lbl[13].gridy = 3;
+		export.add(lbl[13], gbc_lbl[13]);
 
-		textFieldO = new JTextField();
-		GridBagConstraints gbc_textFieldO = new GridBagConstraints();
-		gbc_textFieldO.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldO.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldO.gridx = 1;
-		gbc_textFieldO.gridy = 4;
-		export.add(textFieldO, gbc_textFieldO);
-		textFieldO.setColumns(10);
+		lbl[0] = new JLabel("SPACE");
+		gbc_lbl[0] = new GridBagConstraints();
+		gbc_lbl[0].insets = new Insets(0, 0, 5, 0);
+		gbc_lbl[0].gridx = 13;
+		gbc_lbl[0].gridy = 3;
+		export.add(lbl[0], gbc_lbl[0]);
 
-		textFieldP = new JTextField();
-		GridBagConstraints gbc_textFieldP = new GridBagConstraints();
-		gbc_textFieldP.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldP.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldP.gridx = 2;
-		gbc_textFieldP.gridy = 4;
-		export.add(textFieldP, gbc_textFieldP);
-		textFieldP.setColumns(10);
+		lbl[14] = new JLabel("N");
+		gbc_lbl[14] = new GridBagConstraints();
+		gbc_lbl[14].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[14].gridx = 0;
+		gbc_lbl[14].gridy = 5;
+		export.add(lbl[14], gbc_lbl[14]);
 
-		textFieldQ = new JTextField();
-		GridBagConstraints gbc_textFieldQ = new GridBagConstraints();
-		gbc_textFieldQ.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldQ.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldQ.gridx = 3;
-		gbc_textFieldQ.gridy = 4;
-		export.add(textFieldQ, gbc_textFieldQ);
-		textFieldQ.setColumns(10);
+		lbl[15] = new JLabel("O");
+		gbc_lbl[15] = new GridBagConstraints();
+		gbc_lbl[15].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[15].gridx = 1;
+		gbc_lbl[15].gridy = 5;
+		export.add(lbl[15], gbc_lbl[15]);
 
-		textFieldR = new JTextField();
-		GridBagConstraints gbc_textFieldR = new GridBagConstraints();
-		gbc_textFieldR.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldR.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldR.gridx = 4;
-		gbc_textFieldR.gridy = 4;
-		export.add(textFieldR, gbc_textFieldR);
-		textFieldR.setColumns(10);
+		lbl[16] = new JLabel("P");
+		gbc_lbl[16] = new GridBagConstraints();
+		gbc_lbl[16].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[16].gridx = 2;
+		gbc_lbl[16].gridy = 5;
+		export.add(lbl[16], gbc_lbl[16]);
 
-		textFieldS = new JTextField();
-		GridBagConstraints gbc_textFieldS = new GridBagConstraints();
-		gbc_textFieldS.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldS.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldS.gridx = 5;
-		gbc_textFieldS.gridy = 4;
-		export.add(textFieldS, gbc_textFieldS);
-		textFieldS.setColumns(10);
+		lbl[17] = new JLabel("Q");
+		gbc_lbl[17] = new GridBagConstraints();
+		gbc_lbl[17].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[17].gridx = 3;
+		gbc_lbl[17].gridy = 5;
+		export.add(lbl[17], gbc_lbl[17]);
 
-		textFieldT = new JTextField();
-		GridBagConstraints gbc_textFieldT = new GridBagConstraints();
-		gbc_textFieldT.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldT.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldT.gridx = 6;
-		gbc_textFieldT.gridy = 4;
-		export.add(textFieldT, gbc_textFieldT);
-		textFieldT.setColumns(10);
+		lbl[18] = new JLabel("R");
+		gbc_lbl[18] = new GridBagConstraints();
+		gbc_lbl[18].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[18].gridx = 4;
+		gbc_lbl[18].gridy = 5;
+		export.add(lbl[18], gbc_lbl[18]);
 
-		textFieldU = new JTextField();
-		GridBagConstraints gbc_textFieldU = new GridBagConstraints();
-		gbc_textFieldU.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldU.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldU.gridx = 7;
-		gbc_textFieldU.gridy = 4;
-		export.add(textFieldU, gbc_textFieldU);
-		textFieldU.setColumns(10);
+		lbl[19] = new JLabel("S");
+		gbc_lbl[19] = new GridBagConstraints();
+		gbc_lbl[19].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[19].gridx = 5;
+		gbc_lbl[19].gridy = 5;
+		export.add(lbl[19], gbc_lbl[19]);
 
-		textFieldV = new JTextField();
-		GridBagConstraints gbc_textFieldV = new GridBagConstraints();
-		gbc_textFieldV.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldV.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldV.gridx = 8;
-		gbc_textFieldV.gridy = 4;
-		export.add(textFieldV, gbc_textFieldV);
-		textFieldV.setColumns(10);
+		lbl[20] = new JLabel("T");
+		gbc_lbl[20] = new GridBagConstraints();
+		gbc_lbl[20].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[20].gridx = 6;
+		gbc_lbl[20].gridy = 5;
+		export.add(lbl[20], gbc_lbl[20]);
 
-		textFieldW = new JTextField();
-		GridBagConstraints gbc_textFieldW = new GridBagConstraints();
-		gbc_textFieldW.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldW.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldW.gridx = 9;
-		gbc_textFieldW.gridy = 4;
-		export.add(textFieldW, gbc_textFieldW);
-		textFieldW.setColumns(10);
+		lbl[21] = new JLabel("U");
+		gbc_lbl[21] = new GridBagConstraints();
+		gbc_lbl[21].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[21].gridx = 7;
+		gbc_lbl[21].gridy = 5;
+		export.add(lbl[21], gbc_lbl[21]);
 
-		textFieldX = new JTextField();
-		GridBagConstraints gbc_textFieldX = new GridBagConstraints();
-		gbc_textFieldX.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldX.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldX.gridx = 10;
-		gbc_textFieldX.gridy = 4;
-		export.add(textFieldX, gbc_textFieldX);
-		textFieldX.setColumns(10);
+		lbl[22] = new JLabel("V");
+		gbc_lbl[22] = new GridBagConstraints();
+		gbc_lbl[22].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[22].gridx = 8;
+		gbc_lbl[22].gridy = 5;
+		export.add(lbl[22], gbc_lbl[22]);
 
-		textFieldY = new JTextField();
-		GridBagConstraints gbc_textFieldY = new GridBagConstraints();
-		gbc_textFieldY.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldY.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldY.gridx = 11;
-		gbc_textFieldY.gridy = 4;
-		export.add(textFieldY, gbc_textFieldY);
-		textFieldY.setColumns(10);
+		lbl[23] = new JLabel("W");
+		gbc_lbl[23] = new GridBagConstraints();
+		gbc_lbl[23].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[23].gridx = 9;
+		gbc_lbl[23].gridy = 5;
+		export.add(lbl[23], gbc_lbl[23]);
 
-		textFieldZ = new JTextField();
-		GridBagConstraints gbc_textFieldZ = new GridBagConstraints();
-		gbc_textFieldZ.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldZ.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldZ.gridx = 12;
-		gbc_textFieldZ.gridy = 4;
-		export.add(textFieldZ, gbc_textFieldZ);
-		textFieldZ.setColumns(10);
+		lbl[24] = new JLabel("X");
+		gbc_lbl[24] = new GridBagConstraints();
+		gbc_lbl[24].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[24].gridx = 10;
+		gbc_lbl[24].gridy = 5;
+		export.add(lbl[24], gbc_lbl[24]);
 
-		JLabel lblN = new JLabel("N");
-		GridBagConstraints gbc_lblN = new GridBagConstraints();
-		gbc_lblN.insets = new Insets(0, 0, 0, 5);
-		gbc_lblN.gridx = 0;
-		gbc_lblN.gridy = 5;
-		export.add(lblN, gbc_lblN);
+		lbl[25] = new JLabel("Y");
+		gbc_lbl[25] = new GridBagConstraints();
+		gbc_lbl[25].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[25].gridx = 11;
+		gbc_lbl[25].gridy = 5;
+		export.add(lbl[25], gbc_lbl[25]);
 
-		JLabel lblO = new JLabel("O");
-		GridBagConstraints gbc_lblO = new GridBagConstraints();
-		gbc_lblO.insets = new Insets(0, 0, 0, 5);
-		gbc_lblO.gridx = 1;
-		gbc_lblO.gridy = 5;
-		export.add(lblO, gbc_lblO);
+		lbl[26] = new JLabel("Z");
+		gbc_lbl[26] = new GridBagConstraints();
+		gbc_lbl[26].insets = new Insets(0, 0, 0, 5);
+		gbc_lbl[26].gridx = 12;
+		gbc_lbl[26].gridy = 5;
+		export.add(lbl[26], gbc_lbl[26]);
 
-		JLabel lblP = new JLabel("P");
-		GridBagConstraints gbc_lblP = new GridBagConstraints();
-		gbc_lblP.insets = new Insets(0, 0, 0, 5);
-		gbc_lblP.gridx = 2;
-		gbc_lblP.gridy = 5;
-		export.add(lblP, gbc_lblP);
+		lbl[27] = new JLabel("SEPARATOR");
+		lbl[27].setToolTipText("What character separates each letter");
+		gbc_lbl[27] = new GridBagConstraints();
+		gbc_lbl[27].gridx = 13;
+		gbc_lbl[27].gridy = 5;
+		export.add(lbl[27], gbc_lbl[27]);
 
-		JLabel lblQ = new JLabel("Q");
-		GridBagConstraints gbc_lblQ = new GridBagConstraints();
-		gbc_lblQ.insets = new Insets(0, 0, 0, 5);
-		gbc_lblQ.gridx = 3;
-		gbc_lblQ.gridy = 5;
-		export.add(lblQ, gbc_lblQ);
+		textField[14] = new JTextField();
+		gbc_textField[14] = new GridBagConstraints();
+		gbc_textField[14].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[14].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[14].gridx = 0;
+		gbc_textField[14].gridy = 4;
+		export.add(textField[14], gbc_textField[14]);
+		textField[14].setColumns(10);
 
-		JLabel lblR = new JLabel("R");
-		GridBagConstraints gbc_lblR = new GridBagConstraints();
-		gbc_lblR.insets = new Insets(0, 0, 0, 5);
-		gbc_lblR.gridx = 4;
-		gbc_lblR.gridy = 5;
-		export.add(lblR, gbc_lblR);
+		textField[15] = new JTextField();
+		gbc_textField[15] = new GridBagConstraints();
+		gbc_textField[15].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[15].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[15].gridx = 1;
+		gbc_textField[15].gridy = 4;
+		export.add(textField[15], gbc_textField[15]);
+		textField[15].setColumns(10);
 
-		JLabel lblS = new JLabel("S");
-		GridBagConstraints gbc_lblS = new GridBagConstraints();
-		gbc_lblS.insets = new Insets(0, 0, 0, 5);
-		gbc_lblS.gridx = 5;
-		gbc_lblS.gridy = 5;
-		export.add(lblS, gbc_lblS);
+		textField[16] = new JTextField();
+		gbc_textField[16] = new GridBagConstraints();
+		gbc_textField[16].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[16].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[16].gridx = 2;
+		gbc_textField[16].gridy = 4;
+		export.add(textField[16], gbc_textField[16]);
+		textField[16].setColumns(10);
 
-		JLabel lblT = new JLabel("T");
-		GridBagConstraints gbc_lblT = new GridBagConstraints();
-		gbc_lblT.insets = new Insets(0, 0, 0, 5);
-		gbc_lblT.gridx = 6;
-		gbc_lblT.gridy = 5;
-		export.add(lblT, gbc_lblT);
+		textField[17] = new JTextField();
+		gbc_textField[17] = new GridBagConstraints();
+		gbc_textField[17].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[17].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[17].gridx = 3;
+		gbc_textField[17].gridy = 4;
+		export.add(textField[17], gbc_textField[17]);
+		textField[17].setColumns(10);
 
-		JLabel lblU = new JLabel("U");
-		GridBagConstraints gbc_lblU = new GridBagConstraints();
-		gbc_lblU.insets = new Insets(0, 0, 0, 5);
-		gbc_lblU.gridx = 7;
-		gbc_lblU.gridy = 5;
-		export.add(lblU, gbc_lblU);
+		textField[18] = new JTextField();
+		gbc_textField[18] = new GridBagConstraints();
+		gbc_textField[18].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[18].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[18].gridx = 4;
+		gbc_textField[18].gridy = 4;
+		export.add(textField[18], gbc_textField[18]);
+		textField[18].setColumns(10);
 
-		JLabel lblV = new JLabel("V");
-		GridBagConstraints gbc_lblV = new GridBagConstraints();
-		gbc_lblV.insets = new Insets(0, 0, 0, 5);
-		gbc_lblV.gridx = 8;
-		gbc_lblV.gridy = 5;
-		export.add(lblV, gbc_lblV);
+		textField[19] = new JTextField();
+		gbc_textField[19] = new GridBagConstraints();
+		gbc_textField[19].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[19].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[19].gridx = 5;
+		gbc_textField[19].gridy = 4;
+		export.add(textField[19], gbc_textField[19]);
+		textField[19].setColumns(10);
 
-		JLabel lblW = new JLabel("W");
-		GridBagConstraints gbc_lblW = new GridBagConstraints();
-		gbc_lblW.insets = new Insets(0, 0, 0, 5);
-		gbc_lblW.gridx = 9;
-		gbc_lblW.gridy = 5;
-		export.add(lblW, gbc_lblW);
+		textField[20] = new JTextField();
+		gbc_textField[20] = new GridBagConstraints();
+		gbc_textField[20].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[20].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[20].gridx = 6;
+		gbc_textField[20].gridy = 4;
+		export.add(textField[20], gbc_textField[20]);
+		textField[20].setColumns(10);
 
-		JLabel lblX = new JLabel("X");
-		GridBagConstraints gbc_lblX = new GridBagConstraints();
-		gbc_lblX.insets = new Insets(0, 0, 0, 5);
-		gbc_lblX.gridx = 10;
-		gbc_lblX.gridy = 5;
-		export.add(lblX, gbc_lblX);
+		textField[21] = new JTextField();
+		gbc_textField[21] = new GridBagConstraints();
+		gbc_textField[21].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[21].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[21].gridx = 7;
+		gbc_textField[21].gridy = 4;
+		export.add(textField[21], gbc_textField[21]);
+		textField[21].setColumns(10);
 
-		JLabel lblY = new JLabel("Y");
-		GridBagConstraints gbc_lblY = new GridBagConstraints();
-		gbc_lblY.insets = new Insets(0, 0, 0, 5);
-		gbc_lblY.gridx = 11;
-		gbc_lblY.gridy = 5;
-		export.add(lblY, gbc_lblY);
+		textField[22] = new JTextField();
+		gbc_textField[22] = new GridBagConstraints();
+		gbc_textField[22].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[22].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[22].gridx = 8;
+		gbc_textField[22].gridy = 4;
+		export.add(textField[22], gbc_textField[22]);
+		textField[22].setColumns(10);
 
-		JLabel lblZ = new JLabel("Z");
-		GridBagConstraints gbc_lblZ = new GridBagConstraints();
-		gbc_lblZ.gridx = 12;
-		gbc_lblZ.gridy = 5;
-		export.add(lblZ, gbc_lblZ);
+		textField[23] = new JTextField();
+		gbc_textField[23] = new GridBagConstraints();
+		gbc_textField[23].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[23].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[23].gridx = 9;
+		gbc_textField[23].gridy = 4;
+		export.add(textField[23], gbc_textField[23]);
+		textField[23].setColumns(10);
+
+		textField[24] = new JTextField();
+		gbc_textField[24] = new GridBagConstraints();
+		gbc_textField[24].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[24].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[24].gridx = 10;
+		gbc_textField[24].gridy = 4;
+		export.add(textField[24], gbc_textField[24]);
+		textField[24].setColumns(10);
+
+		textField[25] = new JTextField();
+		gbc_textField[25] = new GridBagConstraints();
+		gbc_textField[25].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[25].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[25].gridx = 11;
+		gbc_textField[25].gridy = 4;
+		export.add(textField[25], gbc_textField[25]);
+		textField[25].setColumns(10);
+
+		textField[26] = new JTextField();
+		gbc_textField[26] = new GridBagConstraints();
+		gbc_textField[26].insets = new Insets(0, 0, 5, 5);
+		gbc_textField[26].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[26].gridx = 12;
+		gbc_textField[26].gridy = 4;
+		export.add(textField[26], gbc_textField[26]);
+		textField[26].setColumns(10);
+
+		textField[27] = new JTextField();
+		gbc_textField[27] = new GridBagConstraints();
+		gbc_textField[27].insets = new Insets(0, 0, 5, 0);
+		gbc_textField[27].fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField[27].gridx = 13;
+		gbc_textField[27].gridy = 4;
+		export.add(textField[27], gbc_textField[27]);
+		textField[27].setColumns(10);
+
+	}
+
+	public boolean customChecker(String customCipher) {
+		if (!customCipher.endsWith(";")) {
+			return false;
+		}
+		System.out.println("running");
+		if (customCipher.isEmpty()) {
+			JOptionPane.showMessageDialog(frame, "Type something in the text box", "Invalid input",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		int numberOfSemicolons = 0;
+		for (int i = 0; i < customCipher.length(); i++) {
+			System.out.println(customCipher.charAt(i));
+			if (customCipher.charAt(i) == ';') {
+				numberOfSemicolons++;
+			}
+		}
+		System.out.println("semicolons found:" + numberOfSemicolons);
+		if (numberOfSemicolons != 28) {
+			JOptionPane.showMessageDialog(frame, "There must be 28 semicolons in the input", "Invalid input",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		String customCipherLetters[] = customCipher.split(";");
+		for (int i = 0; i < customCipherLetters.length; i++) {
+			System.out.println(customCipherLetters[i]);
+		}
+		for (int i = 0; i < customCipherLetters.length; i++) {
+			for (int j = 0; j < customCipherLetters.length; j++) {
+				if ((customCipherLetters[i].contains(customCipherLetters[j]) && j != i
+						&& (("" + customCipherLetters[customCipherLetters.length - 2]).equals(""))
+						&& !customCipherLetters[j].equals(""))
+						|| customCipherLetters[i].equals(customCipherLetters[j])) {
+					System.out.println(customCipherLetters[i] + " contains " + customCipherLetters[j]);
+					JOptionPane.showMessageDialog(frame, "Duplicate or partial duplicate of characters",
+							"Invalid input", JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+			}
+		}
+		if (customCipherLetters[customCipherLetters.length - 2].length() > 1) {
+			System.out.println("Letter separator" + customCipherLetters[customCipherLetters.length - 2]);
+			JOptionPane.showMessageDialog(frame, "Letter separator is more than one character", "Invalid input",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		if (customCipherLetters[customCipherLetters.length - 1].length() > 1) {
+			JOptionPane.showMessageDialog(frame, "Word separator is more than one character", "Invalid input",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		if (customCipherLetters[customCipherLetters.length - 1].length() == 0) {
+			JOptionPane.showMessageDialog(frame, "Word separator is not valid", "Invalid input",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		return true;
 	}
 
 	public void nextTask() {
@@ -743,12 +812,12 @@ public class Window extends JFrame implements ActionListener {
 		Random random = new Random();
 		Ciphers.encipher = random.nextBoolean();
 		Ciphers.testPlaintext = Ciphers
-				.punctuationSeperator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
+				.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
 		if (!Ciphers.difficulty.equals("Easy")) {
 			String plaintextOptions[] = new String[10];
 			for (int i = 0; i < plaintextOptions.length; i++) {
 				plaintextOptions[i] = Ciphers
-						.punctuationSeperator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
+						.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
 			}
 			int maxLength = 0;
 			int maxText = 0;
@@ -777,16 +846,17 @@ public class Window extends JFrame implements ActionListener {
 			instructions.setText("Please " + encipher + " this text.");
 			if (Ciphers.encipher) {
 				instructions.setText("Please " + encipher + " this text in " + Ciphers.testCipher + ".");
-				if (Ciphers.testCipher.equals("Rotational")) {
-					instructions.setText("Please " + encipher + " this text in " + Ciphers.testCipher
-							+ ", with a magnitude of " + Ciphers.adder + ".");
-				}
+
 			}
 		} else {
 			instructions.setText("Please " + encipher + " this text, written in " + Ciphers.testCipher + ".");
 		}
+		if (Ciphers.testCipher.equals("Rotational") && Ciphers.encipher) {
+			System.out.println(Ciphers.testCipher);
+			instructions.setText("Please " + encipher + " this text in " + Ciphers.testCipher + ", with a magnitude of "
+					+ Ciphers.adder + ".");
+		}
 		startButton.setText("Check");
-		System.out.println(Ciphers.testCipher + ": " + Ciphers.testPlaintext + "-->" + Ciphers.testCiphertext);
 		Ciphers.tasksCompleted++;
 	}
 
@@ -799,62 +869,93 @@ public class Window extends JFrame implements ActionListener {
 
 		boolean simpleCipher = false;
 
+		// Checks to see if custom cipher is being used.
+		Ciphers.cipher1isCustom = customChecker(Ciphers.selectedCipher1);
+		Ciphers.cipher2isCustom = customChecker(Ciphers.selectedCipher2);
+		System.out.println("cipher1 " + Ciphers.cipher1isCustom + ", cipher2 " + Ciphers.cipher2isCustom);
+
 		// Converts to plaintext.
-		switch (Ciphers.selectedCipher1) {
-		default:
-			// Default is used for plaintext, reverse, half-reverse and
-			// rotational.
-			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.punctuationSeperator(Ciphers.textContents)[0]);
-			break;
-		case "Number":
-			System.out.println(Ciphers.textContents.charAt(0));
-			try {
-				Integer.parseInt("" + Ciphers.textContents.charAt(0));
-			} catch (NumberFormatException e) {
-				System.out.println("Exception");
-				Ciphers.textContents = Ciphers.textContents.substring(1);
-			}
-			try {
-				Integer.parseInt("" + Ciphers.textContents.charAt(Ciphers.textContents.length() - 1));
-			} catch (NumberFormatException e) {
-				System.out.println("Exception");
-				Ciphers.textContents = Ciphers.textContents.substring(0, Ciphers.textContents.length() - 1);
-			}
-			System.out.println(Ciphers.textContents);
-			if (Ciphers.textContents.charAt(Ciphers.textContents.length() - 1) != '/') {
-				Ciphers.textContents += "/";
-			}
+		if (Ciphers.cipher1isCustom) {
 			simpleCipher = true;
-			break;
-		case "NATO Phonetic":
-			if (Ciphers.textContents.charAt(0) != ' ') {
-				Ciphers.textContents = " " + Ciphers.textContents;
-			}
-		case "Morse Code":
-			simpleCipher = true;
-			break;
-		case "Vatsyayana":
-			Ciphers.plaintextContents = Ciphers
-					.inputToPlaintext(Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.textContents)[0],
-							JOptionPane
-									.showInputDialog(frame,
-											"Type the order of the paired letters used in enciphering this message")
-									.toCharArray()));
-			break;
-		case "Keyword":
-			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.keywordCipher(
-					Ciphers.keyReversal(Ciphers.keywordGen(JOptionPane.showInputDialog(frame,
-							"Type the keyword that was used to encipher this message."))),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[0]));
-			break;
-		case "Vigenere":
-			Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.vigenere(
-					JOptionPane.showInputDialog(frame, "Type the passphrase that was used to encipher this message."),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[0], false));
-		}
-		if (simpleCipher) {
-			// Used for Morse Code, NATO Phonetic and Number.
 			Ciphers.plaintextContents = Ciphers.caster(Ciphers.textContents);
+		} else {
+			switch (Ciphers.selectedCipher1) {
+			default:
+				// Default is used for plaintext, reverse, half-reverse and
+				// rotational.
+				Ciphers.plaintextContents = Ciphers
+						.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents)[0]);
+				break;
+			case "Number":
+				try {
+					Integer.parseInt("" + Ciphers.textContents.charAt(0));
+				} catch (NumberFormatException e) {
+					Ciphers.textContents = Ciphers.textContents.substring(1);
+				}
+				try {
+					Integer.parseInt("" + Ciphers.textContents.charAt(Ciphers.textContents.length() - 1));
+				} catch (NumberFormatException e) {
+					Ciphers.textContents = Ciphers.textContents.substring(0, Ciphers.textContents.length() - 1);
+				}
+				if (Ciphers.textContents.charAt(Ciphers.textContents.length() - 1) != '/') {
+					Ciphers.textContents += "/";
+				}
+				simpleCipher = true;
+				break;
+			case "NATO Phonetic":
+				if (Ciphers.textContents.charAt(0) != ' ') {
+					Ciphers.textContents = " " + Ciphers.textContents;
+				}
+			case "Morse Code":
+				simpleCipher = true;
+				break;
+			case "Vatsyayana":
+				Ciphers.keyword1 = "";
+				while (Ciphers.keyword1.equals("")) {
+					Ciphers.keyword1 = JOptionPane.showInputDialog(frame,
+							"Type the order of the paired letters used in enciphering this message");
+					if (Ciphers.keyword1.equals("")) {
+						JOptionPane.showMessageDialog(frame, "Please type a valid keyword.", "Invalid input",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				Ciphers.plaintextContents = Ciphers
+						.inputToPlaintext(Ciphers.vatsyayana(Ciphers.punctuationSeparator(Ciphers.textContents)[0],
+								Ciphers.keywordGen(Ciphers.keyword1).toCharArray()));
+				break;
+			case "Keyword":
+				Ciphers.keyword1 = JOptionPane.showInputDialog(frame,
+						"Type the keyword that was used to encipher this message.", Ciphers.keyword1);
+				Ciphers.plaintextContents = Ciphers.inputToPlaintext(
+						Ciphers.keywordCipher(Ciphers.keyReversal(Ciphers.keywordGen(Ciphers.keyword1)),
+								Ciphers.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents)[0])));
+				break;
+			case "Vigenere":
+				Ciphers.keyword1 = JOptionPane.showInputDialog(frame,
+						"Type the passphrase that was used to encipher this message.", Ciphers.keyword1);
+				Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.vigenere(Ciphers.keyword1,
+						Ciphers.punctuationSeparator(Ciphers.textContents)[0], false));
+			}
+			if (simpleCipher) {
+				// Used for Morse Code, NATO Phonetic and Number.
+				Ciphers.plaintextContents = Ciphers.caster(Ciphers.textContents);
+			}
+		}
+		if (Ciphers.cipher2isCustom) {
+			String customCipherLetters[] = Ciphers.selectedCipher2.split(";");
+			String output = "";
+			for (int i = 0; i < Ciphers.plaintextContents.length; i++) {
+				System.out.println("i = " + i);
+				if (Ciphers.plaintextContents[i] == -1) {
+					output += customCipherLetters[customCipherLetters.length - 1];
+				} else if (Ciphers.plaintextContents[i] == 0) {
+					output += customCipherLetters[customCipherLetters.length - 3];
+				} else {
+					output += customCipherLetters[(Ciphers.plaintextContents[i] + customCipherLetters.length - 1)
+							% customCipherLetters.length] + customCipherLetters[customCipherLetters.length - 2];
+				}
+			}
+			return output;
 		}
 		switch (Ciphers.selectedCipher2) {
 		default:
@@ -864,7 +965,7 @@ public class Window extends JFrame implements ActionListener {
 				return Ciphers.plaintextToOutput(Ciphers.plaintextContents).trim();
 			} else {
 				return Ciphers.formatter(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
-						Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
+						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
 			}
 		case "Number":
 			String ciphertext = "";
@@ -889,20 +990,57 @@ public class Window extends JFrame implements ActionListener {
 		case "Morse Code":
 			return Ciphers.plaintextToOutput(Ciphers.plaintextContents);
 		case "Vatsyayana":
-			return Ciphers.formatter(
-					Ciphers.vatsyayana(Ciphers.punctuationSeperator(Ciphers.textContents)[0],
-							JOptionPane.showInputDialog(frame, "Type the order of your paired letters").toCharArray()),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
+			Ciphers.keyword2 = "";
+			while (Ciphers.keyword2.equals("")) {
+				Ciphers.keyword2 = JOptionPane.showInputDialog(frame, "Type the order of your paired letters");
+				if (Ciphers.keyword2.equals("")) {
+					JOptionPane.showMessageDialog(frame, "Please type a valid keyword.", "Invalid input",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			if (simpleCipher) {
+				return Ciphers.vatsyayana(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
+						Ciphers.keywordGen(Ciphers.keyword2).toCharArray());
+			} else {
+				return Ciphers.formatter(
+						Ciphers.vatsyayana(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
+								Ciphers.keywordGen(Ciphers.keyword2).toCharArray()),
+						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+			}
 		case "Keyword":
-			return Ciphers.formatter(
-					Ciphers.keywordCipher(Ciphers.keywordGen(JOptionPane.showInputDialog(frame, "Type your keyword.")),
-							Ciphers.punctuationSeperator(Ciphers.textContents)[0]),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
+			Ciphers.keyword2 = "";
+			while (Ciphers.keyword2.equals("")) {
+				Ciphers.keyword2 = JOptionPane.showInputDialog(frame, "Type your keyword.");
+				if (Ciphers.keyword2.equals("")) {
+					JOptionPane.showMessageDialog(frame, "Please type a valid keyword.", "Invalid input",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			if (simpleCipher) {
+				return Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
+						Ciphers.inputToPlaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents)));
+			} else {
+				return Ciphers.formatter(
+						Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
+								Ciphers.inputToPlaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents))),
+						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+			}
 		case "Vigenere":
-			return Ciphers.formatter(
-					Ciphers.vigenere(JOptionPane.showInputDialog(frame, "Type your passphrase"),
-							Ciphers.plaintextToOutput(Ciphers.plaintextContents), true),
-					Ciphers.punctuationSeperator(Ciphers.textContents)[1]);
+			Ciphers.keyword2 = "";
+			while (Ciphers.keyword2.equals("")) {
+				Ciphers.keyword2 = JOptionPane.showInputDialog(frame, "Type your passphrase");
+				if (Ciphers.keyword2.equals("")) {
+					JOptionPane.showMessageDialog(frame, "Please type a valid passphrase.", "Invalid input",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			if (simpleCipher) {
+				return Ciphers.vigenere(Ciphers.keyword2, Ciphers.plaintextToOutput(Ciphers.plaintextContents), true);
+			} else {
+				return Ciphers.formatter(
+						Ciphers.vigenere(Ciphers.keyword2, Ciphers.plaintextToOutput(Ciphers.plaintextContents), true),
+						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+			}
 		}
 	}
 
@@ -916,25 +1054,36 @@ public class Window extends JFrame implements ActionListener {
 				Ciphers.testRunning = true;
 				Ciphers.tasksCompleted = 0;
 				String[] difficulties = { "Easy", "Medium", "Hard" };
-				Ciphers.difficulty = (String) JOptionPane.showInputDialog(frame, "Set difficulty", "Set difficulty",
-						JOptionPane.PLAIN_MESSAGE, null, difficulties, "Easy");
-				boolean success = true;
-				while (success) {
-					success = false;
+				boolean failure = true;
+				while (failure) {
+					failure = false;
+					Ciphers.difficulty = (String) JOptionPane.showInputDialog(frame, "Set difficulty", "Set difficulty",
+							JOptionPane.PLAIN_MESSAGE, null, difficulties, "Easy");
+					try {
+						Ciphers.difficulty.equals("");
+					} catch (NullPointerException e) {
+						JOptionPane.showMessageDialog(frame, "Please select a difficulty setting.", "Invalid input",
+								JOptionPane.ERROR_MESSAGE);
+						failure = true;
+					}
+				}
+				failure = true;
+				while (failure) {
+					failure = false;
 					try {
 						Ciphers.numberOfTasks = Integer
 								.parseInt(JOptionPane.showInputDialog(frame, "How many tasks do you want?"));
 					} catch (NumberFormatException e) {
 						JOptionPane.showMessageDialog(frame, "Please enter a number, not letters.", "Invalid input",
 								JOptionPane.ERROR_MESSAGE);
-						success = true;
+						failure = true;
 					}
 				}
 				nextTask();
 			} else if (startButton.getText().equals("Check")) {
-				if ((Ciphers.punctuationSeperator(outputFromUser.getText())[0].equals(Ciphers.testPlaintext)
+				if ((Ciphers.punctuationSeparator(outputFromUser.getText())[0].equals(Ciphers.testPlaintext)
 						&& !Ciphers.encipher)
-						|| (Ciphers.punctuationSeperator(outputFromUser.getText())[0].equals(Ciphers.testCiphertext)
+						|| (Ciphers.punctuationSeparator(outputFromUser.getText())[0].equals(Ciphers.testCiphertext)
 								&& Ciphers.encipher)) {
 					Ciphers.tasksCorrect++;
 					outputFromUser.setBackground(Color.GREEN);
@@ -948,71 +1097,30 @@ public class Window extends JFrame implements ActionListener {
 				}
 				startButton.setText("Next");
 			} else if (startButton.getText().equals("Next")) {
-				System.out.println(Ciphers.tasksCompleted + "/" + Ciphers.numberOfTasks);
 				if (Ciphers.tasksCompleted < Ciphers.numberOfTasks) {
 					nextTask();
 				} else {
 					startButton.setText("Start");
 					JOptionPane.showMessageDialog(frame,
 							"Number of tasks completed correctly: " + Ciphers.tasksCorrect + "/" + Ciphers.numberOfTasks
-									+ "\nAccuracy: " + ((double) (Ciphers.tasksCorrect / Ciphers.numberOfTasks) * 100),
+									+ "\nAccuracy: " + ((double) (Ciphers.tasksCorrect / Ciphers.numberOfTasks) * 100)
+									+ "%",
 							"Results", JOptionPane.PLAIN_MESSAGE);
 					Ciphers.testRunning = false;
 				}
 			}
 		} else if (event.getSource() == finish) {
-
-			while (Ciphers.emptyCipher < 16 && !Ciphers.namesOfCiphers[Ciphers.emptyCipher].equals("")) {
-				Ciphers.emptyCipher++;
-			}
-			if (Ciphers.emptyCipher == 16) {
-				String[] customCiphers = new String[6];
-				for (int i = 0; i < customCiphers.length; i++) {
-					customCiphers[i] = Ciphers.namesOfCiphers[i + 10];
-				}
-				String cipherToErase = null;
-				while (cipherToErase == null) {
-					cipherToErase = (String) JOptionPane.showInputDialog(frame, "Which cipher would you like to erase?",
-							"Too many ciphers", JOptionPane.PLAIN_MESSAGE, null, customCiphers, customCiphers[0]);
-				}
-				for (int i = 10; i < customCiphers.length; i++) {
-					if (customCiphers[i].equals(cipherToErase)) {
-						Ciphers.emptyCipher = i;
-					}
-				}
-			}
-			Ciphers.namesOfCiphers[Ciphers.emptyCipher] = JOptionPane.showInputDialog(frame,
-					"What would you like to call your cipher?");
+			System.out.println("Finish button pressed.");
 			if (plainFormat.getText().equals("")
-					|| plainFormat.getText().equals("a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z;")) {
-				plainFormat.setText(textFieldA.getText() + ";" + textFieldB.getText() + ";" + textFieldC.getText() + ";"
-						+ textFieldD.getText() + ";" + textFieldE.getText() + ";" + textFieldF.getText() + ";"
-						+ textFieldG.getText() + ";" + textFieldH.getText() + ";" + textFieldI.getText() + ";"
-						+ textFieldJ.getText() + ";" + textFieldK.getText() + ";" + textFieldL.getText() + ";"
-						+ textFieldM.getText() + ";" + textFieldN.getText() + ";" + textFieldO.getText() + ";"
-						+ textFieldP.getText() + ";" + textFieldQ.getText() + ";" + textFieldR.getText() + ";"
-						+ textFieldS.getText() + ";" + textFieldT.getText() + ";" + textFieldU.getText() + ";"
-						+ textFieldV.getText() + ";" + textFieldW.getText() + ";" + textFieldX.getText() + ";"
-						+ textFieldY.getText() + ";" + textFieldZ.getText() + ";");
-			}
-			Ciphers.ciphers[Ciphers.emptyCipher - 5] = plainFormat.getText().split(";");
-			ciphers_selectCipher1.removeAllItems();
-			ciphers_selectCipher2.removeAllItems();
-			database_selectCiphers.removeAllItems();
-			for (int i = 0; i < Ciphers.namesOfCiphers.length; i++) {
-				ciphers_selectCipher1.addItem(makeObj(Ciphers.namesOfCiphers[i]));
-				ciphers_selectCipher2.addItem(makeObj(Ciphers.namesOfCiphers[i]));
-				database_selectCiphers.addItem(makeObj(Ciphers.namesOfCiphers[i]));
-				// TODO Cipher comboboxes not updating
+					|| plainFormat.getText().equals("a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z;; ;")) {
+				String plainFormatTemp = "";
+				for (int i = 1; i < textField.length + 1; i++) {
+					plainFormatTemp += textField[(i % textField.length)].getText() + ";";
+				}
+				plainFormat.setText(plainFormatTemp);
+				JOptionPane.showMessageDialog(frame,
+						"Copy the text from the text box and paste it in the cipher list on the Cipher window.");
 			}
 		}
-	}
-
-	private Object makeObj(final String item) {
-		return new Object() {
-			public String toString() {
-				return item;
-			}
-		};
 	}
 }

@@ -9,7 +9,10 @@ public class Ciphers {
 
 	// TODO Put comments everywhere in Window class
 
-	// TODO Allow ciphering between non-letters and vatsyayana
+	// TODO Allow ciphering between non-letters and vatsyayana - i.e. add all
+	// codings between plaintext numbers
+
+	// TODO Indepth database
 
 	// The string array below contains all the explanations of different
 	// ciphers. It is formatted like this: {Title, Explanation, Usage}.
@@ -53,17 +56,10 @@ public class Ciphers {
 			{ ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---",
 					".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." },
 			{ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
-					"V", "W", "X", "Y", "Z" },
-			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
-			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
-			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
-			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
-			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" },
-			{ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-					"" } };
+					"V", "W", "X", "Y", "Z" } };
 
 	public static final String[] namesOfCiphers = { "Plaintext", "Number", "Rotational", "Reverse", "Half-reverse",
-			"NATO Phonetic", "Morse Code", "Vatsyayana", "Keyword", "Vigenere", "", "", "", "", "", "" };
+			"NATO Phonetic", "Morse Code", "Vatsyayana", "Keyword", "Vigenere" };
 
 	public static final String[] exampleText = { "Humans have a long period of development after birth",
 			"Their life depends less on instinct than other animals, and more on learning",
@@ -259,6 +255,8 @@ public class Ciphers {
 	public static String selectedCipher2 = "";
 	public static String textContents = "";
 	public static int[] plaintextContents;
+	public static String keyword1 = "";
+	public static String keyword2 = "";
 
 	// testing variables
 	public static String difficulty;
@@ -272,11 +270,12 @@ public class Ciphers {
 	public static String testPlaintext;
 	public static String testCiphertext;
 
-	// create variables
-	public static int emptyCipher;
+	// custom cipher variables
+	public static boolean cipher1isCustom;
+	public static boolean cipher2isCustom;
 
 	// This code converts a string of numbers, NATO keywords or Morse code and
-	// seperator to an int array.
+	// separator to an int array.
 	public static int[] caster(String text) {
 		// Initializes the array to return, and the two ints to help with
 		// substrings and slotting the correct numbers into the array.
@@ -288,6 +287,51 @@ public class Ciphers {
 		int startingPoint = 0;
 		String output = "";
 		// Goes through entire input string
+		if (cipher1isCustom) {
+			String customCipherLetters[] = selectedCipher1.split(";");
+			char letterSeparator = customCipherLetters[customCipherLetters.length - 2].toCharArray()[0];
+			System.out.println(letterSeparator);
+			if (text.charAt(text.length() - 1) != letterSeparator) {
+				// TODO get full stop working
+				text += letterSeparator;
+			}
+			for (int i = 0; i < text.length(); i++) {
+				if (text.charAt(i) == letterSeparator
+						|| ("" + text.charAt(i)).equals(customCipherLetters[customCipherLetters.length - 1])) {
+					for (int j = 0; j < customCipherLetters.length; j++) {
+						System.out.println(text.substring(startingPoint, i) + "=" + customCipherLetters[j]);
+						if (text.substring(startingPoint, i).equals(customCipherLetters[j])) {
+							if (j != 26) {
+								result[placeInArray] = j + 1;
+								System.out.println("found " + (j + 1));
+								j = 0;
+								placeInArray++;
+							}
+
+							try {
+								System.out.println("substring: " + text.substring(i, i + 1));
+								if (text.substring(i, i + 1)
+										.equals(customCipherLetters[customCipherLetters.length - 1])) {
+									System.out.println("is substring");
+									placeInArray++;
+									i++;
+								}
+							} catch (StringIndexOutOfBoundsException e) {
+								break;
+							}
+							startingPoint = i;
+							i++;
+						}
+					}
+				}
+			}
+			for (int i = 0; i < result.length; i++) {
+				if (result[i] == 27) {
+					result[i] = -1;
+				}
+			}
+			return result;
+		}
 		switch (selectedCipher1) {
 		case "Number":
 			for (int i = 0; i < text.length(); i++) {
@@ -349,7 +393,7 @@ public class Ciphers {
 	}
 
 	// This code removes all punctuation and capital letters.
-	public static String[] punctuationSeperator(String text) {
+	public static String[] punctuationSeparator(String text) {
 		String[] plaintext = { text.toLowerCase(), text };
 		for (int i = 0; i < text.length(); i++) {
 			for (int j = 0; j < 26; j++) {
@@ -562,6 +606,9 @@ public class Ciphers {
 		// endOfAlphabet records where the keyword ends. This ensures rest of
 		// key is generated from the last letter, not from the start of the
 		// alphabet. The int is constant.
+		if (key.isEmpty()) {
+			return "abcdefghijklmnopqrstuvwxyz";
+		}
 		int endOfAlphabet = inputToPlaintext("" + key.charAt(key.length() - 1))[0];
 
 		for (int i = endOfAlphabet; i < 26 + endOfAlphabet; i++) {
@@ -605,8 +652,7 @@ public class Ciphers {
 
 	// The method below takes plaintext and converts into ciphertext using a
 	// keyword.
-	public static String keywordCipher(String keyword, String text) {
-		int[] cipherNumbers = inputToPlaintext(text);
+	public static String keywordCipher(String keyword, int[] cipherNumbers) {
 		String enciphered = "";
 		// Scrolls through the message and adds the corresponding letter from
 		// the keyword to the final string.
@@ -620,14 +666,13 @@ public class Ciphers {
 	// the boolean encode) using a passphrase.
 	public static String vigenere(String passphrase, String text, boolean encode) {
 		// Makes the passphrase nice and big.
-		passphrase = punctuationSeperator(passphrase)[0];
+		passphrase = punctuationSeparator(passphrase)[0];
 		passphrase = passphrase.replaceAll(" ", "");
 		if (passphrase.equals("")) {
 			return text;
 		}
 		for (int i = 0; i < (text.length() / passphrase.length()) + 1; i++) {
 			passphrase += passphrase + passphrase;
-			System.out.println(passphrase);
 		}
 		// Shortens it to the appropriate length.
 		passphrase = passphrase.substring(0, text.length());
