@@ -773,7 +773,7 @@ public class Window extends JFrame implements ActionListener {
 				if ((customCipherLetters[i].contains(customCipherLetters[j]) && j != i
 						&& (("" + customCipherLetters[customCipherLetters.length - 2]).equals(""))
 						&& !customCipherLetters[j].equals(""))
-						|| customCipherLetters[i].equals(customCipherLetters[j])) {
+						|| (customCipherLetters[i].equals(customCipherLetters[j]) && j != i)) {
 					System.out.println(customCipherLetters[i] + " contains " + customCipherLetters[j]);
 					JOptionPane.showMessageDialog(frame, "Duplicate or partial duplicate of characters",
 							"Invalid input", JOptionPane.ERROR_MESSAGE);
@@ -812,12 +812,13 @@ public class Window extends JFrame implements ActionListener {
 		Random random = new Random();
 		Ciphers.encipher = random.nextBoolean();
 		Ciphers.testPlaintext = Ciphers
-				.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
+				.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)]).getText();
 		if (!Ciphers.difficulty.equals("Easy")) {
 			String plaintextOptions[] = new String[10];
 			for (int i = 0; i < plaintextOptions.length; i++) {
 				plaintextOptions[i] = Ciphers
-						.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
+						.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])
+						.getText();
 			}
 			int maxLength = 0;
 			int maxText = 0;
@@ -868,6 +869,7 @@ public class Window extends JFrame implements ActionListener {
 		Ciphers.plaintextContents = new int[Ciphers.textContents.length()];
 
 		boolean simpleCipher = false;
+		boolean failure = true;
 
 		// Checks to see if custom cipher is being used.
 		Ciphers.cipher1isCustom = customChecker(Ciphers.selectedCipher1);
@@ -884,7 +886,7 @@ public class Window extends JFrame implements ActionListener {
 				// Default is used for plaintext, reverse, half-reverse and
 				// rotational.
 				Ciphers.plaintextContents = Ciphers
-						.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents)[0]);
+						.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents).getText());
 				break;
 			case "Number":
 				try {
@@ -911,30 +913,60 @@ public class Window extends JFrame implements ActionListener {
 				break;
 			case "Vatsyayana":
 				Ciphers.keyword1 = "";
-				while (Ciphers.keyword1.equals("")) {
-					Ciphers.keyword1 = JOptionPane.showInputDialog(frame,
-							"Type the order of the paired letters used in enciphering this message");
-					if (Ciphers.keyword1.equals("")) {
+				failure = true;
+				while (failure) {
+					failure = false;
+					Ciphers.keyword1 = (String) JOptionPane.showInputDialog(frame,
+							"Type the order of your paired letters.");
+					try {
+						Ciphers.keyword1.equals("");
+					} catch (NullPointerException e) {
 						JOptionPane.showMessageDialog(frame, "Please type a valid keyword.", "Invalid input",
 								JOptionPane.ERROR_MESSAGE);
+						failure = true;
 					}
 				}
-				Ciphers.plaintextContents = Ciphers
-						.inputToPlaintext(Ciphers.vatsyayana(Ciphers.punctuationSeparator(Ciphers.textContents)[0],
+
+				Ciphers.plaintextContents = Ciphers.inputToPlaintext(
+						Ciphers.vatsyayana(Ciphers.punctuationSeparator(Ciphers.textContents).getText(),
 								Ciphers.keywordGen(Ciphers.keyword1).toCharArray()));
 				break;
 			case "Keyword":
-				Ciphers.keyword1 = JOptionPane.showInputDialog(frame,
-						"Type the keyword that was used to encipher this message.", Ciphers.keyword1);
-				Ciphers.plaintextContents = Ciphers.inputToPlaintext(
-						Ciphers.keywordCipher(Ciphers.keyReversal(Ciphers.keywordGen(Ciphers.keyword1)),
-								Ciphers.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents)[0])));
+				Ciphers.keyword1 = "";
+				failure = true;
+				while (failure) {
+					failure = false;
+					Ciphers.keyword1 = (String) JOptionPane.showInputDialog(frame,
+							"Type the keyword that was used to encipher this message.");
+					try {
+						Ciphers.keyword1.equals("");
+					} catch (NullPointerException e) {
+						JOptionPane.showMessageDialog(frame, "Please type a valid keyword.", "Invalid input",
+								JOptionPane.ERROR_MESSAGE);
+						failure = true;
+					}
+				}
+				Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.keywordCipher(
+						Ciphers.keyReversal(Ciphers.keywordGen(Ciphers.keyword1)),
+						Ciphers.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents).getText())));
 				break;
 			case "Vigenere":
-				Ciphers.keyword1 = JOptionPane.showInputDialog(frame,
-						"Type the passphrase that was used to encipher this message.", Ciphers.keyword1);
+				Ciphers.keyword1 = "";
+				failure = true;
+				while (failure) {
+					failure = false;
+					Ciphers.keyword1 = (String) JOptionPane.showInputDialog(frame,
+							"Type the passphrase that was used to encipher this message.");
+					try {
+						Ciphers.keyword1.equals("");
+					} catch (NullPointerException e) {
+						JOptionPane.showMessageDialog(frame, "Please type a valid passphrase.", "Invalid input",
+								JOptionPane.ERROR_MESSAGE);
+						failure = true;
+					}
+				}
 				Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.vigenere(Ciphers.keyword1,
-						Ciphers.punctuationSeparator(Ciphers.textContents)[0], false));
+						Ciphers.punctuationSeparator(Ciphers.textContents).getText(), false));
 			}
 			if (simpleCipher) {
 				// Used for Morse Code, NATO Phonetic and Number.
@@ -964,8 +996,8 @@ public class Window extends JFrame implements ActionListener {
 			if (simpleCipher) {
 				return Ciphers.plaintextToOutput(Ciphers.plaintextContents).trim();
 			} else {
-				return Ciphers.formatter(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+				return Ciphers.formatter(new Plaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
+						Ciphers.punctuationSeparator(Ciphers.textContents).getFormat()));
 			}
 		case "Number":
 			String ciphertext = "";
@@ -991,55 +1023,73 @@ public class Window extends JFrame implements ActionListener {
 			return Ciphers.plaintextToOutput(Ciphers.plaintextContents);
 		case "Vatsyayana":
 			Ciphers.keyword2 = "";
-			while (Ciphers.keyword2.equals("")) {
-				Ciphers.keyword2 = JOptionPane.showInputDialog(frame, "Type the order of your paired letters");
-				if (Ciphers.keyword2.equals("")) {
+			failure = true;
+			while (failure) {
+				failure = false;
+				Ciphers.keyword2 = (String) JOptionPane.showInputDialog(frame, "Type the order of your paired letters");
+				try {
+					Ciphers.keyword2.equals("");
+				} catch (NullPointerException e) {
 					JOptionPane.showMessageDialog(frame, "Please type a valid keyword.", "Invalid input",
 							JOptionPane.ERROR_MESSAGE);
+					failure = true;
 				}
 			}
 			if (simpleCipher) {
 				return Ciphers.vatsyayana(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
 						Ciphers.keywordGen(Ciphers.keyword2).toCharArray());
 			} else {
-				return Ciphers.formatter(
+				return Ciphers.formatter(new Plaintext(
 						Ciphers.vatsyayana(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
 								Ciphers.keywordGen(Ciphers.keyword2).toCharArray()),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+						Ciphers.punctuationSeparator(Ciphers.textContents).getFormat()));
 			}
 		case "Keyword":
 			Ciphers.keyword2 = "";
-			while (Ciphers.keyword2.equals("")) {
-				Ciphers.keyword2 = JOptionPane.showInputDialog(frame, "Type your keyword.");
-				if (Ciphers.keyword2.equals("")) {
+			failure = true;
+			while (failure) {
+				failure = false;
+				Ciphers.keyword2 = (String) JOptionPane.showInputDialog(frame, "Type your keyword");
+				try {
+					Ciphers.keyword2.equals("");
+				} catch (NullPointerException e) {
 					JOptionPane.showMessageDialog(frame, "Please type a valid keyword.", "Invalid input",
 							JOptionPane.ERROR_MESSAGE);
+					failure = true;
 				}
 			}
 			if (simpleCipher) {
 				return Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
 						Ciphers.inputToPlaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents)));
 			} else {
-				return Ciphers.formatter(
-						Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
-								Ciphers.inputToPlaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents))),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+				return Ciphers
+						.formatter(
+								new Plaintext(
+										Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
+												Ciphers.inputToPlaintext(
+														Ciphers.plaintextToOutput(Ciphers.plaintextContents))),
+										Ciphers.punctuationSeparator(Ciphers.textContents).getFormat()));
 			}
 		case "Vigenere":
 			Ciphers.keyword2 = "";
-			while (Ciphers.keyword2.equals("")) {
-				Ciphers.keyword2 = JOptionPane.showInputDialog(frame, "Type your passphrase");
-				if (Ciphers.keyword2.equals("")) {
+			failure = true;
+			while (failure) {
+				failure = false;
+				Ciphers.keyword2 = (String) JOptionPane.showInputDialog(frame, "Type your passphrase");
+				try {
+					Ciphers.keyword2.equals("");
+				} catch (NullPointerException e) {
 					JOptionPane.showMessageDialog(frame, "Please type a valid passphrase.", "Invalid input",
 							JOptionPane.ERROR_MESSAGE);
+					failure = true;
 				}
 			}
 			if (simpleCipher) {
 				return Ciphers.vigenere(Ciphers.keyword2, Ciphers.plaintextToOutput(Ciphers.plaintextContents), true);
 			} else {
-				return Ciphers.formatter(
+				return Ciphers.formatter(new Plaintext(
 						Ciphers.vigenere(Ciphers.keyword2, Ciphers.plaintextToOutput(Ciphers.plaintextContents), true),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+						Ciphers.punctuationSeparator(Ciphers.textContents).getFormat()));
 			}
 		}
 	}
@@ -1081,10 +1131,10 @@ public class Window extends JFrame implements ActionListener {
 				}
 				nextTask();
 			} else if (startButton.getText().equals("Check")) {
-				if ((Ciphers.punctuationSeparator(outputFromUser.getText())[0].equals(Ciphers.testPlaintext)
-						&& !Ciphers.encipher)
-						|| (Ciphers.punctuationSeparator(outputFromUser.getText())[0].equals(Ciphers.testCiphertext)
-								&& Ciphers.encipher)) {
+				if ((Ciphers.punctuationSeparator(outputFromUser.getText()).getText()
+						.equals(Ciphers.punctuationSeparator(Ciphers.testPlaintext).getText()) && !Ciphers.encipher)
+						|| (Ciphers.punctuationSeparator(outputFromUser.getText()).getText().equals(
+								Ciphers.punctuationSeparator(Ciphers.testCiphertext).getText()) && Ciphers.encipher)) {
 					Ciphers.tasksCorrect++;
 					outputFromUser.setBackground(Color.GREEN);
 				} else {
@@ -1101,10 +1151,12 @@ public class Window extends JFrame implements ActionListener {
 					nextTask();
 				} else {
 					startButton.setText("Start");
-					JOptionPane.showMessageDialog(frame,
-							"Number of tasks completed correctly: " + Ciphers.tasksCorrect + "/" + Ciphers.numberOfTasks
-									+ "\nAccuracy: " + ((double) (Ciphers.tasksCorrect / Ciphers.numberOfTasks) * 100)
-									+ "%",
+					System.out.println(Ciphers.tasksCorrect + ", " + Ciphers.numberOfTasks);
+					double accuracy = Ciphers.tasksCorrect / Ciphers.numberOfTasks;
+					System.out.println(accuracy);
+					JOptionPane.showMessageDialog(
+							frame, "Number of tasks completed correctly: " + Ciphers.tasksCorrect + "/"
+									+ Ciphers.numberOfTasks + "\nAccuracy: " + (accuracy * 100) + "%",
 							"Results", JOptionPane.PLAIN_MESSAGE);
 					Ciphers.testRunning = false;
 				}
