@@ -392,53 +392,6 @@ public class Ciphers {
 		return result;
 	}
 
-	// This code removes all punctuation and capital letters.
-	public static String[] punctuationSeparator(String text) {
-		String[] plaintext = { text.toLowerCase(), text };
-		for (int i = 0; i < text.length(); i++) {
-			for (int j = 0; j < 26; j++) {
-				if (("" + text.charAt(i)).equals(ciphers[0][j])) {
-					// If character is a letter, it is set to space.
-					plaintext[1] = plaintext[1].substring(0, i) + " " + plaintext[1].substring(i + 1);
-					break;
-				}
-				if (("" + text.charAt(i)).equals(ciphers[3][j])) {
-					// If character is a capital letter, it is set to `.
-					plaintext[1] = plaintext[1].substring(0, i) + "`" + plaintext[1].substring(i + 1);
-					break;
-				}
-				if (("" + text.charAt(i)).equals(" ")) {
-					// If character is a space, it is set to ~.
-					plaintext[1] = plaintext[1].substring(0, i) + "~" + plaintext[1].substring(i + 1);
-					break;
-				}
-			}
-		}
-		return plaintext;
-	}
-
-	public static String formatter(String text, String format) {
-		for (int i = 0; i < text.length(); i++) {
-			if (format.charAt(i) == '~') {
-				// If the formatting has a ~, it replaces the character with a
-				// space.
-				text = text.substring(0, i) + " " + text.substring(i + 1);
-			} else if (format.charAt(i) == '`') {
-				// If the formatting has a `, it replaces the character with its
-				// capital.
-				String temp = selectedCipher1;
-				selectedCipher1 = "Plaintext";
-				text = text.substring(0, i) + ciphers[3][(inputToPlaintext("" + text.charAt(i))[0] + 25) % 26]
-						+ text.substring(i + 1);
-				selectedCipher1 = temp;
-			} else if (format.charAt(i) != ' ') {
-				// If the formatting isn't space, ` or ~, then it replaces it.
-				text = text.substring(0, i) + format.charAt(i) + text.substring(i + 1);
-			}
-		}
-		return text;
-	}
-
 	// The method below converts a string of text to an array of numbers. For
 	// example, "hello" would translate to {8, 5, 12, 12, 15}.
 	public static int[] inputToPlaintext(String text) {
@@ -666,7 +619,8 @@ public class Ciphers {
 	// the boolean encode) using a passphrase.
 	public static String vigenere(String passphrase, String text, boolean encode) {
 		// Makes the passphrase nice and big.
-		passphrase = punctuationSeparator(passphrase)[0];
+		Plaintext plaintext = new Plaintext(passphrase);
+		passphrase = plaintext.getText();
 		passphrase = passphrase.replaceAll(" ", "");
 		if (passphrase.equals("")) {
 			return text;

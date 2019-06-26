@@ -811,13 +811,15 @@ public class Window extends JFrame implements ActionListener {
 		String encipher = "";
 		Random random = new Random();
 		Ciphers.encipher = random.nextBoolean();
-		Ciphers.testPlaintext = Ciphers
-				.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
+		
+		Plaintext testPlaintext = new Plaintext(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)]);
+		Ciphers.testPlaintext = testPlaintext.getText();
+
 		if (!Ciphers.difficulty.equals("Easy")) {
 			String plaintextOptions[] = new String[10];
 			for (int i = 0; i < plaintextOptions.length; i++) {
-				plaintextOptions[i] = Ciphers
-						.punctuationSeparator(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)])[0];
+				Plaintext option = new Plaintext(Ciphers.exampleText[random.nextInt(Ciphers.exampleText.length)]);
+				plaintextOptions[i] = option.getText();
 			}
 			int maxLength = 0;
 			int maxText = 0;
@@ -875,6 +877,9 @@ public class Window extends JFrame implements ActionListener {
 		System.out.println("cipher1 " + Ciphers.cipher1isCustom + ", cipher2 " + Ciphers.cipher2isCustom);
 
 		// Converts to plaintext.
+		
+		Plaintext plaintext = new Plaintext(Ciphers.textContents);
+		
 		if (Ciphers.cipher1isCustom) {
 			simpleCipher = true;
 			Ciphers.plaintextContents = Ciphers.caster(Ciphers.textContents);
@@ -883,8 +888,7 @@ public class Window extends JFrame implements ActionListener {
 			default:
 				// Default is used for plaintext, reverse, half-reverse and
 				// rotational.
-				Ciphers.plaintextContents = Ciphers
-						.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents)[0]);
+				Ciphers.plaintextContents = Ciphers.inputToPlaintext(plaintext.getText());
 				break;
 			case "Number":
 				try {
@@ -920,7 +924,7 @@ public class Window extends JFrame implements ActionListener {
 					}
 				}
 				Ciphers.plaintextContents = Ciphers
-						.inputToPlaintext(Ciphers.vatsyayana(Ciphers.punctuationSeparator(Ciphers.textContents)[0],
+						.inputToPlaintext(Ciphers.vatsyayana(plaintext.getText(),
 								Ciphers.keywordGen(Ciphers.keyword1).toCharArray()));
 				break;
 			case "Keyword":
@@ -928,13 +932,13 @@ public class Window extends JFrame implements ActionListener {
 						"Type the keyword that was used to encipher this message.", Ciphers.keyword1);
 				Ciphers.plaintextContents = Ciphers.inputToPlaintext(
 						Ciphers.keywordCipher(Ciphers.keyReversal(Ciphers.keywordGen(Ciphers.keyword1)),
-								Ciphers.inputToPlaintext(Ciphers.punctuationSeparator(Ciphers.textContents)[0])));
+								Ciphers.inputToPlaintext(plaintext.getText())));
 				break;
 			case "Vigenere":
 				Ciphers.keyword1 = JOptionPane.showInputDialog(frame,
 						"Type the passphrase that was used to encipher this message.", Ciphers.keyword1);
 				Ciphers.plaintextContents = Ciphers.inputToPlaintext(Ciphers.vigenere(Ciphers.keyword1,
-						Ciphers.punctuationSeparator(Ciphers.textContents)[0], false));
+						plaintext.getText(), false));
 			}
 			if (simpleCipher) {
 				// Used for Morse Code, NATO Phonetic and Number.
@@ -964,8 +968,8 @@ public class Window extends JFrame implements ActionListener {
 			if (simpleCipher) {
 				return Ciphers.plaintextToOutput(Ciphers.plaintextContents).trim();
 			} else {
-				return Ciphers.formatter(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+				plaintext.setText(Ciphers.plaintextToOutput(Ciphers.plaintextContents));
+				return plaintext.toString();
 			}
 		case "Number":
 			String ciphertext = "";
@@ -1002,10 +1006,9 @@ public class Window extends JFrame implements ActionListener {
 				return Ciphers.vatsyayana(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
 						Ciphers.keywordGen(Ciphers.keyword2).toCharArray());
 			} else {
-				return Ciphers.formatter(
-						Ciphers.vatsyayana(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
-								Ciphers.keywordGen(Ciphers.keyword2).toCharArray()),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+				plaintext.setText(Ciphers.vatsyayana(Ciphers.plaintextToOutput(Ciphers.plaintextContents),
+						Ciphers.keywordGen(Ciphers.keyword2).toCharArray()));
+				return plaintext.toString();
 			}
 		case "Keyword":
 			Ciphers.keyword2 = "";
@@ -1020,10 +1023,9 @@ public class Window extends JFrame implements ActionListener {
 				return Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
 						Ciphers.inputToPlaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents)));
 			} else {
-				return Ciphers.formatter(
-						Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
-								Ciphers.inputToPlaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents))),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+				plaintext.setText(Ciphers.keywordCipher(Ciphers.keywordGen(Ciphers.keyword2),
+								Ciphers.inputToPlaintext(Ciphers.plaintextToOutput(Ciphers.plaintextContents))));
+				return plaintext.toString();
 			}
 		case "Vigenere":
 			Ciphers.keyword2 = "";
@@ -1037,9 +1039,8 @@ public class Window extends JFrame implements ActionListener {
 			if (simpleCipher) {
 				return Ciphers.vigenere(Ciphers.keyword2, Ciphers.plaintextToOutput(Ciphers.plaintextContents), true);
 			} else {
-				return Ciphers.formatter(
-						Ciphers.vigenere(Ciphers.keyword2, Ciphers.plaintextToOutput(Ciphers.plaintextContents), true),
-						Ciphers.punctuationSeparator(Ciphers.textContents)[1]);
+				plaintext.setText(Ciphers.vigenere(Ciphers.keyword2, Ciphers.plaintextToOutput(Ciphers.plaintextContents), true));
+				return plaintext.toString();
 			}
 		}
 	}
@@ -1081,9 +1082,10 @@ public class Window extends JFrame implements ActionListener {
 				}
 				nextTask();
 			} else if (startButton.getText().equals("Check")) {
-				if ((Ciphers.punctuationSeparator(outputFromUser.getText())[0].equals(Ciphers.testPlaintext)
+				Plaintext testPlaintext = new Plaintext(outputFromUser.getText());
+				if ((testPlaintext.getText().equals(Ciphers.testPlaintext)
 						&& !Ciphers.encipher)
-						|| (Ciphers.punctuationSeparator(outputFromUser.getText())[0].equals(Ciphers.testCiphertext)
+						|| (testPlaintext.getText().equals(Ciphers.testCiphertext)
 								&& Ciphers.encipher)) {
 					Ciphers.tasksCorrect++;
 					outputFromUser.setBackground(Color.GREEN);
