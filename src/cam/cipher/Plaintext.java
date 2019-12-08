@@ -20,17 +20,30 @@ public class Plaintext {
 			for (int j = 0; j < 26; j++) {
 				if (("" + text.charAt(i)).equals(Ciphers.ciphers[0][j])) {
 					// If character is a letter, it is set to space.
-					format = format.substring(0, i) + " " + format.substring(i + 1);
+					try {
+						format = format.substring(0, i) + " " + format.substring(i + 1);
+					} catch (StringIndexOutOfBoundsException e) {
+						format = format.substring(0, i) + " ";
+					}
 					break;
 				}
 				if (("" + text.charAt(i)).equals(Ciphers.ciphers[3][j])) {
 					// If character is a capital letter, it is set to `.
-					format = format.substring(0, i) + "`" + format.substring(i + 1);
+					try {
+						format = format.substring(0, i) + "`" + format.substring(i + 1);
+					} catch (StringIndexOutOfBoundsException e) {
+						format = format.substring(0, i) + "`";
+					}
 					break;
 				}
 				if (("" + text.charAt(i)).equals(" ")) {
 					// If character is a space, it is set to ~.
-					format = format.substring(0, i) + "~" + format.substring(i + 1);
+					try {
+						format = format.substring(0, i) + "~" + format.substring(i + 1);
+					} catch (StringIndexOutOfBoundsException e) {
+						format = format.substring(0, i) + "~";
+
+					}
 					break;
 				}
 			}
