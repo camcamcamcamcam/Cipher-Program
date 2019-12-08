@@ -15,35 +15,22 @@ public class Plaintext {
 	// This code removes all punctuation and capital letters.
 	public Plaintext(String text) {
 		this.text = text.toLowerCase();
-		String format = "";
+		String format = new String(new char[text.length()]);
 		for (int i = 0; i < text.length(); i++) {
 			for (int j = 0; j < 26; j++) {
 				if (("" + text.charAt(i)).equals(Ciphers.ciphers[0][j])) {
 					// If character is a letter, it is set to space.
-					try {
 						format = format.substring(0, i) + " " + format.substring(i + 1);
-					} catch (StringIndexOutOfBoundsException e) {
-						format = format.substring(0, i) + " ";
-					}
 					break;
 				}
 				if (("" + text.charAt(i)).equals(Ciphers.ciphers[3][j])) {
 					// If character is a capital letter, it is set to `.
-					try {
 						format = format.substring(0, i) + "`" + format.substring(i + 1);
-					} catch (StringIndexOutOfBoundsException e) {
-						format = format.substring(0, i) + "`";
-					}
 					break;
 				}
 				if (("" + text.charAt(i)).equals(" ")) {
 					// If character is a space, it is set to ~.
-					try {
 						format = format.substring(0, i) + "~" + format.substring(i + 1);
-					} catch (StringIndexOutOfBoundsException e) {
-						format = format.substring(0, i) + "~";
-
-					}
 					break;
 				}
 			}
